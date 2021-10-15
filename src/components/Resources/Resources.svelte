@@ -32,8 +32,8 @@
 </section>
 
 <script type="typescript">
-	import { Resource } from '../types.js';
-	import { fetchResources } from '../utils.js';
+	import { Resource } from '../../types.js';
+	import { fetchResources } from '../../utils.js';
 
 	let resources: Resource[] = [];
 

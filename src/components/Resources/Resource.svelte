@@ -15,8 +15,8 @@
 </section>
 
 <script type="typescript">
-	import { Resource, Reservation } from '../types.js';
-	import { fetchResource, fetchReservations } from '../utils.js';
+	import { Resource, Reservation } from '../../types.js';
+	import { fetchResource, fetchReservations } from '../../utils.js';
 
 	export let id: string;
 

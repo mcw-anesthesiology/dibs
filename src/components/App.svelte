@@ -28,8 +28,8 @@
 <script type="typescript">
 	import { Route, router } from 'tinro';
 
-	import Resources from './Resources.svelte';
-	import Resource from './Resource.svelte';
+	import Resources from './Resources/Resources.svelte';
+	import Resource from './Resources/Resource.svelte';
 
 	router.mode.hash();
 </script>
