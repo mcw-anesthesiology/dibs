@@ -1,0 +1,33 @@
+export type DateString = string;
+
+export interface Resource {
+	id: string; // Not sure why wordpress is giving me these as strings
+	name: string;
+	description: string;
+	updated_at: Date;
+	archived_at: Date | null;
+}
+
+export interface ReserverRole {
+	id: string;
+	role: string;
+	resource_id: string;
+}
+
+export interface Reservation {
+	id: string;
+	user_id: string;
+	resource_id: string;
+	reservation_start: DateString;
+	reservation_end: DateString;
+	description: string;
+	status: Status;
+	created_at: Date;
+	updated_at: Date;
+	deleted_at: Date | null;
+}
+
+export enum Status {
+	Submitted = 'submitted',
+	Cancelled = 'cancelled',
+}
