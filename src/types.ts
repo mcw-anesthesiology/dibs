@@ -1,5 +1,11 @@
 export type DateString = string;
 
+export interface User {
+	id: string;
+	name: string;
+	admin: boolean;
+}
+
 export interface Resource {
 	id: string; // Not sure why wordpress is giving me these as strings
 	name: string;

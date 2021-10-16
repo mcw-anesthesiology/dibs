@@ -1,7 +1,29 @@
 import { derived, writable, Writable, Readable } from 'svelte/store';
 
-import { Reservation, Resource, ReserverRole } from './types.js';
-import { fetchReservations, fetchResources, fetchReservers } from './utils.js';
+import type { User, Reservation, Resource, ReserverRole } from './types.js';
+import {
+	fetchUsers,
+	fetchReservations,
+	fetchResources,
+	fetchReservers,
+} from './utils.js';
+
+export const users: Writable<User[]> = writable([], set => {
+	fetchUsers().then(users => {
+		set(users);
+	});
+});
+
+export const userMap: Readable<Map<string, User>> = derived(
+	users,
+	$users => new Map($users.map(u => [u.id.toString(), u]))
+);
+
+export const userGetter: Readable<(_: number | string) => User | null> =
+	derived(
+		userMap,
+		$userMap => (id: number | string) => $userMap.get(id.toString())
+	);
 
 export const resources: Writable<Resource[]> = writable([], set => {
 	fetchResources().then(resources => {
@@ -9,11 +31,16 @@ export const resources: Writable<Resource[]> = writable([], set => {
 	});
 });
 
+export const resourceMap: Readable<Map<string, Resource>> = derived(
+	resources,
+	$resources => new Map($resources.map(r => [r.id.toString(), r]))
+);
+
 export const resourceGetter: Readable<(_: number | string) => Resource | null> =
 	derived(
-		resources,
+		resourceMap,
 		// eslint-disable-next-line eqeqeq
-		$resources => (id: number | string) => $resources.find(r => r.id == id)
+		$resourceMap => (id: number | string) => $resourceMap.get(id.toString())
 	);
 
 export const reservations: Writable<Reservation[]> = writable([], set => {

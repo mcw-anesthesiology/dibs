@@ -8,12 +8,14 @@
 	{#if reservations?.length}
 		<ol>
 			{#each reservations as reservation}
-				<li>{JSON.stringify(reservation)}</li>
+				<ListItem {reservation} />
 			{/each}
 		</ol>
 	{/if}
 </section>
 <script type="typescript">
+	import ListItem from './ListItem.svelte';
+
 	import { Reservation } from '../../types.js';
 	import { fetchReservations } from '../../utils.js';
 

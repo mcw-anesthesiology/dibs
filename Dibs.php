@@ -91,13 +91,13 @@ class Dibs {
 			'callback' => function($request) {
 				$users = get_users(['fields' => 'all_with_meta']);
 
-				return array_map(function ($user) {
+				return array_values(array_map(function ($user) {
 					return [
 						'id' => $user->ID,
-						'display_name' => $user->display_name,
+						'name' => $user->display_name,
 						'admin' => $user->has_cap(self::ADMIN_CAP)
 					];
-				}, $users);
+				}, $users));
 			}
 		]);
 

@@ -24,6 +24,7 @@ class ReservationsController extends BaseController {
 		'reservation_start',
 		'reservation_end',
 	];
+	const ORDER_BY = 'reservation_start DESC';
 	const DELETED_AT_COLUMN = 'deleted_at';
 
 	public static function post($request) {

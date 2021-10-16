@@ -1,4 +1,5 @@
 import type {
+	User,
 	Resource,
 	ReserverRole,
 	Reservation,
@@ -49,6 +50,10 @@ async function fetchRecords(
 	return fetch(url, {
 		...fetchConfig(),
 	}).then(r => r.json());
+}
+
+export async function fetchUsers(): Promise<User[]> {
+	return fetchRecords('users') as Promise<User[]>;
 }
 
 export async function fetchResources(
