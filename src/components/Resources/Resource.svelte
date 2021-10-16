@@ -9,7 +9,7 @@
 		{#if reservations?.length}
 			<ol>
 				{#each reservations as reservation}
-					<li>{JSON.stringify(reservation)}</li>
+					<ListItem {reservation} />
 				{/each}
 			</ol>
 		{/if}
@@ -24,6 +24,7 @@
 	import { Route, router } from 'tinro';
 
 	import Add from '../Reservations/Add.svelte';
+	import ListItem from '../Reservations/ListItem.svelte';
 
 	import { Resource, Reservation } from '../../types.js';
 	import { resourceGetter } from '../../stores.js';
