@@ -113,3 +113,12 @@ function transformDates(obj: any, keys: string[]): any {
 export function parseDate(date: DateString): Date {
 	return new Date(date);
 }
+
+export function dateString(date: Date): string {
+	const s = date.toISOString();
+	return s.substring(0, s.indexOf('T'));
+}
+
+export function dateTimeString(date: Date): string {
+	return date.toISOString().replace('T', ' ');
+}

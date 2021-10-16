@@ -37,6 +37,8 @@
 	import Reservations from './Reservations/Reservations.svelte';
 	import Add from './Reservations/Add.svelte';
 
+	import '../global.css';
+
 	router.mode.hash();
 </script>
 

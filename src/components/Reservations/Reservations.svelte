@@ -5,6 +5,33 @@
 		Add
 	</a>
 
+	<form>
+		<fieldset>
+			<legend>Reservation date</legend>
+
+			<button type="button" on:click={thisMonth}>
+				This month
+			</button>
+
+			<button type="button" on:click={() => { shiftMonth(-1); }}>
+				← Previous month
+			</button>
+
+			<label>
+				Start
+				<Flatpickr options={startOptions} bind:value={after} />
+			</label>
+			–
+			<label>
+				End
+				<Flatpickr options={endOptions} bind:value={before} />
+			</label>
+
+			<button type="button" on:click={() => { shiftMonth(1); }}>
+				Next month →
+			</button>
+		</fieldset>
+	</form>
 	{#if reservations?.length}
 		<ol>
 			{#each reservations as reservation}
@@ -14,21 +41,55 @@
 	{:else}
 		<i>None found.</i>
 	{/if}
-	<Paginator bind:limit bind:offset pagesRemaining={reservations.length >= limit} />
 </section>
 <script type="typescript">
-	import ListItem from './ListItem.svelte';
-	import Paginator from '../Paginator.svelte';
+	import Flatpickr from 'svelte-flatpickr';
+	import 'flatpickr/dist/flatpickr.css';
 
-	let limit = 1;
-	let offset = 0;
+	import ListItem from './ListItem.svelte';
+
 
 	import { Reservation } from '../../types.js';
-	import { fetchReservations } from '../../utils.js';
+	import { dateString, fetchReservations } from '../../utils.js';
+
+	let after = new Date();
+	let before = new Date();
+	thisMonth();
+
+	console.log({ startOfMonth: after, endOfMonth: before });
+
+	const startOptions = {
+		defaultDate: after,
+	};
+
+	const endOptions = {
+		defaultDate: before,
+	};
+
+	$: console.log({ before, after });
 
 	let reservations: Reservation[] = [];
 
-	$: fetchReservations({ limit, offset }).then(r => {
+	$: fetchReservations({
+		before: dateString(before),
+		after: dateString(after)
+	}).then(r => {
 		reservations = r;
 	});
+
+	function shiftMonth(num: number) {
+		after.setMonth(after.getMonth() + num);
+		after.setDate(1);
+		before.setFullYear(after.getFullYear(), after.getMonth() + 1, 0);
+		after = after;
+		before = before;
+	}
+
+	function thisMonth() {
+		const d = new Date();
+		after.setFullYear(d.getFullYear(), d.getMonth(), 1);
+		before.setFullYear(d.getFullYear(), d.getMonth() + 1, 0);
+		after = after;
+		before = before;
+	}
 </script>
