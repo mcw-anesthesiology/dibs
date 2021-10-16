@@ -4,6 +4,8 @@
 	{#if resource}
 		{JSON.stringify(resource)}
 
+		<a href="/#/resources/{id}/reserve">Reserve</a>
+
 		{#if reservations?.length}
 			<ol>
 				{#each reservations as reservation}
@@ -11,23 +13,39 @@
 				{/each}
 			</ol>
 		{/if}
+
+		<Route path="/reserve">
+			<Add resourceId={id} {reservations} on:submit={handleAdd} />
+		</Route>
 	{/if}
 </section>
 
 <script type="typescript">
+	import { Route, router } from 'tinro';
+
+	import Add from '../Reservations/Add.svelte';
+
 	import { Resource, Reservation } from '../../types.js';
-	import { fetchResource, fetchReservations } from '../../utils.js';
+	import { resourceGetter } from '../../stores.js';
+	import { fetchReservations } from '../../utils.js';
 
 	export let id: string;
 
 	let resource: Resource = null;
-	let reservations: Reservation[] = [];
+	$: resource = $resourceGetter(id);
 
-	fetchResource(id).then(r => {
-		resource = r;
-	});
+	let reservations: Reservation[];
 
-	fetchReservations({'resource_id': id}).then(r => {
-		reservations = r;
-	});
+	reload();
+
+	function reload() {
+		fetchReservations({'resource_id': id}).then(r => {
+			reservations = r;
+		});
+	}
+
+	function handleAdd() {
+		router.goto(`/resources/${id}`);
+		reload();
+	}
 </script>

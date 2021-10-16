@@ -20,11 +20,14 @@
 		<Route path="/resources/">
 			<Resources />
 		</Route>
-		<Route path="/resources/:id" let:meta>
+		<Route path="/resources/:id/*" let:meta>
 			<Resource id={meta.params.id} />
 		</Route>
 		<Route path="/reservations">
 			<Reservations />
+		</Route>
+		<Route path="/reservations/add">
+			<Add />
 		</Route>
 	</main>
 </article>
@@ -35,6 +38,7 @@
 	import Resources from './Resources/Resources.svelte';
 	import Resource from './Resources/Resource.svelte';
 	import Reservations from './Reservations/Reservations.svelte';
+	import Add from './Reservations/Add.svelte';
 
 	router.mode.hash();
 </script>

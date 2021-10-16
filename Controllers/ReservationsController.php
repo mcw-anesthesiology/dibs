@@ -11,34 +11,44 @@ use WP_Error;
 class ReservationsController extends BaseController {
 	const TABLE = 'reservations';
 	const COLUMNS = [
-		'name',
-		'desc',
+		'user_id',
+		'resource_id',
+		'reservation_start',
+		'reservation_end',
+		'description',
+		'status',
 	];
 	const REQUIRED = [
-		'name'
+		'user_id',
+		'resource_id',
+		'reservation_start',
+		'reservation_end',
 	];
 	const DELETED_AT_COLUMN = 'deleted_at';
 
 	public static function post($request) {
 		global $wpdb;
 
-		$params = $request->get_params();
+		$params = static::getParams($request->get_params());
+		$user = wp_get_current_user();
+		$params['user_id'] = $user->ID;
+		$params['status'] = 'submitted';
+
+		if (!self::canReserve($user, $params['resource_id']))
+			return new WP_Error('unauthorized', 'Unauthorized', ['status' => 403]);
+
 		foreach (static::REQUIRED as $param) {
 			if (empty($params[$param])) {
 				return new WP_Error('missing_params', 'Missing required parameters', ['status' => 400]);
 			}
 		}
 
-		$user = wp_get_current_user();
-		if (!self::canReserve($user, $params['resource_id']))
-			return new WP_Error('unauthorized', 'Unauthorized', ['status' => 403]);
-
 		if (self::alreadyBooked($params['resource_id'], $params['reservation_start'], $params['reservation_end']))
 			return new WP_Error('taken', 'Already booked', ['status' => 403]);
 
 
 		$table = Dibs::getTableName(static::TABLE);
-		$wpdb->insert($table, static::getParams($request->get_params()));
+		$wpdb->insert($table, $params);
 
 		$query = "SELECT * FROM {$table} WHERE id = %d";
 		return self::decodeJsonCols($wpdb->get_row($wpdb->prepare($query, [$wpdb->insert_id]), ARRAY_A));
@@ -52,7 +62,7 @@ class ReservationsController extends BaseController {
 		$query = "select count(id) as existing from {$reservations}
 			where resource_id = %d and reservation_start < %s and reservation_end > %s";
 
-		$result = $wpdb->get_row($wpdb->prepare($query, [$resourceId, $end, $start]));
+		$result = $wpdb->get_row($wpdb->prepare($query, [$resourceId, $end, $start]), ARRAY_A);
 
 		return $result['existing'] > 0;
 	}
@@ -65,7 +75,7 @@ class ReservationsController extends BaseController {
 		$reservers = Dibs::getTableName('reserver_roles');
 
 		$query = "select role from {$reservers} where resource_id = %d";
-		$roles = $wpdb->get_results($wpdb->prepare($query, $resourceId));
+		$roles = $wpdb->get_results($wpdb->prepare($query, $resourceId), ARRAY_A);
 		foreach ($roles as $role) {
 			if ($user->has_cap($role)) return true;
 		}

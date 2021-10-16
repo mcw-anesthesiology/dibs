@@ -1,6 +1,9 @@
 <section>
 	<h2>Reservations</h2>
 
+	<a href="/#/reservations/add">
+		Add
+	</a>
 
 	{#if reservations?.length}
 		<ol>
@@ -16,6 +19,7 @@
 
 	let reservations: Reservation[] = [];
 
+	// TODO: Paginate
 	fetchReservations().then(r => {
 		reservations = r;
 	});

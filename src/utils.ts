@@ -6,23 +6,49 @@ import type {
 	DateString,
 } from './types.js';
 
-function resourceAddress(path: string): string {
+function getRestNonce() {
+	const meta = document.querySelector(
+		'meta[name="wp_rest"]'
+	) as HTMLMetaElement;
+
+	if (meta) return meta.content;
+
+	console.error('Error getting wp_rest nonce');
+}
+
+export function address(path: string): string {
 	return `${import.meta.env.VITE_BASE_URL}${
 		import.meta.env.VITE_API_PATH
 	}/${path}`;
+}
+
+export function headers(): Record<string, string> {
+	return {
+		'Content-Type': 'application/json',
+		'X-WP-Nonce': getRestNonce(),
+	};
+}
+
+export function fetchConfig(): Record<string, any> {
+	return {
+		headers: headers(),
+		credentials: 'include',
+	};
 }
 
 async function fetchRecords(
 	table: string,
 	params?: Record<string, string>
 ): Promise<any> {
-	let url = resourceAddress(table);
+	let url = address(table);
 	if (params) {
 		const search = new URLSearchParams(params);
 		url += '?' + search.toString();
 	}
 
-	return fetch(url).then(r => r.json());
+	return fetch(url, {
+		...fetchConfig(),
+	}).then(r => r.json());
 }
 
 export async function fetchResources(

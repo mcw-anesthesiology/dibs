@@ -85,8 +85,10 @@ class BaseController {
 
 		$query = "SELECT * FROM {$table}";
 
-		$params = static::getParams($request->get_params(), true);
-		$whereClauses = static::whereClauses($params);
+		$params = $request->get_params();
+		$whereParams = static::getParams($params, true);
+		$whereClauses = static::whereClauses($whereParams);
+		$whereValues = array_values($whereParams);
 
 		if (!empty(static::DELETED_AT_COLUMN)) {
 			$whereClauses[] = static::DELETED_AT_COLUMN . ' IS NULL';
@@ -100,8 +102,18 @@ class BaseController {
 			$query .= ' ORDER BY ' . static::ORDER_BY;
 		}
 
+		if (!empty($params['limit']) && is_numeric($params['limit'])) {
+			$query .= ' limit %d';
+			$whereValues[] = $params['limit'];
+		}
+
+		if (!empty($params['offset']) && is_numeric($params['offset'])) {
+			$query .= ' offset %d';
+			$whereValues[] = $params['offset'];
+		}
+
 		if (!empty($whereClauses)) {
-			$query = $wpdb->prepare($query, array_values($params));
+			$query = $wpdb->prepare($query, $whereValues);
 		}
 
 		$results = $wpdb->get_results($query, ARRAY_A);

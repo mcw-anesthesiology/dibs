@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta id="nonce-meta" name="wp_rest" content="" />
 
 		<title>Dibs Reservations</title>
 
@@ -11,6 +12,22 @@
 	</head>
 
 	<body>
+		<header>
+			<label>
+				Nonce
+				<input type="text" id="nonce-input" />
+			</label>
+		</header>
+
 		<main id="dibs-app"></main>
+
+		<script>
+			const input = document.getElementById('nonce-input');
+			const meta = document.getElementById('nonce-meta');
+			meta.content = input.value;
+			input.oninput = event => {
+				meta.content = input.value;
+			};
+		</script>
 	</body>
 </html>
