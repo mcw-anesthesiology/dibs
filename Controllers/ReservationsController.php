@@ -27,6 +27,20 @@ class ReservationsController extends BaseController {
 	const ORDER_BY = 'reservation_start DESC';
 	const DELETED_AT_COLUMN = 'deleted_at';
 
+	public static function get($request, $whereClauses = [], $whereValues = []) {
+		if (!empty($request->get_param('after'))) {
+			$whereClauses[] = 'reservation_end >= %s';
+			$whereValues[] = $request->get_param('after');
+		}
+
+		if (!empty($request->get_param('before'))) {
+			$whereClauses[] = 'reservation_start <= %s';
+			$whereValues[] = $request->get_param('before');
+		}
+
+		return parent::get($request, $whereClauses, $whereValues);
+	}
+
 	public static function post($request) {
 		global $wpdb;
 

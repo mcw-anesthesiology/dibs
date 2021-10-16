@@ -78,7 +78,7 @@ class BaseController {
 		}, array_keys($params), $params);
 	}
 
-	public static function get($request) {
+	public static function get($request, $whereClauses = [], $whereValues = []) {
 		global $wpdb;
 
 		$table = Dibs::getTableName(static::TABLE);
@@ -87,8 +87,8 @@ class BaseController {
 
 		$params = $request->get_params();
 		$whereParams = static::getParams($params, true);
-		$whereClauses = static::whereClauses($whereParams);
-		$whereValues = array_values($whereParams);
+		$whereClauses = array_merge($whereClauses, static::whereClauses($whereParams));
+		$whereValues = array_merge($whereValues, array_values($whereParams));
 
 		if (!empty(static::DELETED_AT_COLUMN)) {
 			$whereClauses[] = static::DELETED_AT_COLUMN . ' IS NULL';
