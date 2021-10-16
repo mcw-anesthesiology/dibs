@@ -3,9 +3,6 @@
 		<nav>
 			<ul>
 				<li>
-					<a href="/#/">Home</a>
-				</li>
-				<li>
 					<a href="/#/resources/">Resources</a>
 				</li>
 				<li>
