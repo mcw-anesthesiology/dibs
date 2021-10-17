@@ -54,7 +54,7 @@
 
 <script type="typescript">
 	import { createEventDispatcher } from 'svelte';
-	import Flatpickr from 'svelte-flatpickr/src/Flatpickr.svelte';
+	import Flatpickr from 'svelte-flatpickr';
 	import 'flatpickr/dist/flatpickr.css';
 
 	import ListItem from './ListItem.svelte';
