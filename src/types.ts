@@ -12,6 +12,7 @@ export interface Resource {
 	description: string | null;
 	updated_at: Date;
 	archived_at: Date | null;
+	can_reserve?: boolean;
 }
 
 export interface ReserverRole {

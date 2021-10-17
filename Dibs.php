@@ -86,24 +86,34 @@ class Dibs {
 
 		}, 10, 4);
 
+		register_rest_route(self::API_NAMESPACE, '/me', [
+			'methods' => ['GET'],
+			'callback' => function($request) {
+				$user = wp_get_current_user();
+				return self::transformUser($user);
+			}
+		]);
+
 		register_rest_route(self::API_NAMESPACE, '/users', [
 			'methods' => ['GET'],
 			'callback' => function($request) {
 				$users = get_users(['fields' => 'all_with_meta']);
 
-				return array_values(array_map(function ($user) {
-					return [
-						'id' => $user->ID,
-						'name' => $user->display_name,
-						'admin' => $user->has_cap(self::ADMIN_CAP)
-					];
-				}, $users));
+				return array_values(array_map('Dibs::transformUser', $users));
 			}
 		]);
 
 		self::registerController('/reservations', Controllers\ReservationsController::class);
 		self::registerController('/reservers', Controllers\ReserversController::class);
 		self::registerController('/resources', Controllers\ResourcesController::class);
+	}
+
+	static function transformUser($user) {
+		return [
+			'id' => $user->ID,
+			'name' => $user->display_name,
+			'admin' => $user->has_cap(self::ADMIN_CAP)
+		];
 	}
 
 	static function registerController($path, $controller) {

@@ -146,7 +146,6 @@ class BaseController {
 			return self::decodeJsonCols($result);
 
 		return new WP_Error('not-found', 'Not found', ['status' => 404]);
-
 	}
 
 	public static function post($request) {
