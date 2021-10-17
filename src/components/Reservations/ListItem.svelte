@@ -1,4 +1,7 @@
 <li>
+	<LabeledValue label="Resource">
+		{resource?.name ?? ''}
+	</LabeledValue>
 	<LabeledValue label="Reserved by">
 		{reserver?.name ?? ''}
 	</LabeledValue>
@@ -17,13 +20,16 @@
 	import LabeledValue from '../LabeledValue.svelte';
 	import RichDate from '../RichDate.svelte';
 
-	import { User, Reservation } from '../../types.js';
-	import { userGetter } from '../../stores.js';
+	import { User, Reservation, Resource } from '../../types.js';
+	import { resourceGetter, userGetter } from '../../stores.js';
 
 	export let reservation: Reservation;
 
 	let reserver: User;
 	$: reserver = $userGetter(reservation.user_id);
+
+	let resource: Resource;
+	$: resource = $resourceGetter(reservation.resource_id);
 </script>
 
 <style>
@@ -31,7 +37,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		padding: 0.5em;
-		border: 1px solid var(--border-color);
 	}
 
 	li:hover {
@@ -41,7 +46,7 @@
 	@supports (display: grid) {
 		li {
 			display: grid;
-			grid-template-columns: repeat(4, 1fr);
+			grid-template-columns: repeat(5, 1fr);
 		}
 	}
 </style>

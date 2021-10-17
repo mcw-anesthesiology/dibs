@@ -33,5 +33,8 @@ export default ({ mode }) => {
 				fileName: format => `dibs.${format}.js`,
 			},
 		},
+		optimizeDeps: {
+			exclude: ['tinro'],
+		},
 	};
 };

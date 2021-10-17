@@ -122,3 +122,12 @@ export function dateString(date: Date): string {
 export function dateTimeString(date: Date): string {
 	return date.toISOString().replace('T', ' ');
 }
+
+export function thisMonth(): [Date, Date] {
+	const after = new Date();
+	const before = new Date();
+	after.setDate(1);
+	before.setMonth(before.getMonth() + 1, 0);
+
+	return [after, before];
+}

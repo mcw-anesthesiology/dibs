@@ -14,17 +14,20 @@
 
 	<main>
 		<Route path="/" redirect="/resources" />
-		<Route path="/resources/">
-			<Resources />
+		<Route path="/resources/*" firstmatch>
+			<Route path="/">
+				<Resources />
+			</Route>
+			<Route path="/add">
+				<h2>Add resource</h2>
+				<AddResource />
+			</Route>
+			<Route path="/:id/*" let:meta>
+				<Resource id={meta.params.id} />
+			</Route>
 		</Route>
-		<Route path="/resources/:id/*" let:meta>
-			<Resource id={meta.params.id} />
-		</Route>
-		<Route path="/reservations">
+		<Route path="/reservations/*">
 			<Reservations />
-		</Route>
-		<Route path="/reservations/add">
-			<Add />
 		</Route>
 	</main>
 </article>
@@ -34,8 +37,8 @@
 
 	import Resources from './Resources/Resources.svelte';
 	import Resource from './Resources/Resource.svelte';
+	import AddResource from './Resources/Add.svelte';
 	import Reservations from './Reservations/Reservations.svelte';
-	import Add from './Reservations/Add.svelte';
 
 	import '../global.css';
 
@@ -44,14 +47,6 @@
 
 <style>
 	nav ul {
-		display: flex;
-		flex-wrap: wrap;
 		justify-content: flex-end;
-		margin: 0;
-	}
-
-	nav li {
-		display: block;
-		margin: 0.5em;
 	}
 </style>

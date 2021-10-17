@@ -6,8 +6,7 @@
 	display: inline-block;
 }
 
-.dibs-reservations label input,
-.dibs-reservations label textarea {
+.dibs-reservations label :is(input, textarea, select) {
 	display: block;
 }
 
@@ -41,4 +40,33 @@
 
 .dibs-reservations p {
 	margin-top: 0;
+}
+
+.dibs-reservations nav ul {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0;
+	padding: 0;
+}
+
+.dibs-reservations nav li {
+	display: block;
+	margin: 0.5em;
+}
+
+.dibs-reservations .button-container {
+	margin: 1em;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.dibs-reservations .button-container > * {
+	margin: 0.5em;
+}
+
+.dibs-reservations .error-container {
+	border: 1px solid rgba(255, 0, 0, 0.4);
+	background-color: rgba(255, 0, 0, 0.01);
+	color: crimson;
 }

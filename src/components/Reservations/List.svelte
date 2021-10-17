@@ -4,26 +4,26 @@
 			<legend>Reservation date</legend>
 
 			<div class="date-controls">
-				<button type="button" on:click={thisMonth}>
+				<button type="button" on:click={setThisMonth}>
 					This month
 				</button>
 
 				<div>
-					<button type="button" on:click={() => { shiftMonth(-1); }}>
+					<button type="button" on:click={() => { shiftMonth(-1); }} disabled={!after || !before}>
 						← Prev month
 					</button>
 
 					<label>
 						Start
-						<Flatpickr options={startOptions} bind:value={after} />
+						<Flatpickr bind:value={after} />
 					</label>
 					–
 					<label>
 						End
-						<Flatpickr options={endOptions} bind:value={before} />
+						<Flatpickr bind:value={before} />
 					</label>
 
-					<button type="button" on:click={() => { shiftMonth(1); }}>
+					<button type="button" on:click={() => { shiftMonth(1); }} disabled={!after || !before}>
 						Next month →
 					</button>
 				</div>
@@ -38,7 +38,7 @@
 			{/each}
 		</ol>
 	{:else}
-		<i>None found.</i>
+		<i>No reservations found.</i>
 	{/if}
 </div>
 
@@ -49,22 +49,15 @@
 	import ListItem from './ListItem.svelte';
 
 	import { Reservation } from '../../types.js';
+	import { thisMonth } from '../../utils.js';
 
 	export let reservations: Reservation[];
-	export let after = new Date();
-	export let before = new Date();
-	thisMonth();
-
-
-	const startOptions = {
-		defaultDate: after,
-	};
-
-	const endOptions = {
-		defaultDate: before,
-	};
+	export let after: Date;
+	export let before: Date;
 
 	function shiftMonth(num: number) {
+		if (!after || !before) return;
+
 		after.setMonth(after.getMonth() + num);
 		after.setDate(1);
 		before.setFullYear(after.getFullYear(), after.getMonth() + 1, 0);
@@ -72,12 +65,10 @@
 		before = before;
 	}
 
-	function thisMonth() {
-		const d = new Date();
-		after.setFullYear(d.getFullYear(), d.getMonth(), 1);
-		before.setFullYear(d.getFullYear(), d.getMonth() + 1, 0);
-		after = after;
-		before = before;
+	function setThisMonth() {
+		const [a, b] = thisMonth();
+		after = a;
+		before = b;
 	}
 </script>
 
@@ -95,5 +86,13 @@
 
 	button {
 		margin: 0.5em 1em;
+	}
+
+	ol {
+		padding: 0;
+	}
+
+	ol :global(li) {
+		border: 1px solid var(--border-color);
 	}
 </style>
