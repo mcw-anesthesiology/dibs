@@ -1,4 +1,4 @@
-<article role="application">
+<article role="application" class="dibs-reservations">
 	<header>
 		<nav>
 			<ul>

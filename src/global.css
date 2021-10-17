@@ -1,8 +1,44 @@
-label {
+.dibs-reservations {
+	--border-color: #ccc;
+}
+
+.dibs-reservations label {
 	display: inline-block;
 }
 
-label input,
-label textarea {
+.dibs-reservations label input,
+.dibs-reservations label textarea {
 	display: block;
+}
+
+.dibs-reservations pre {
+	font-family: inherit;
+	margin: 0;
+}
+
+.dibs-reservations h1 {
+	font-size: 3em;
+	margin-top: 0.25em;
+}
+
+.dibs-reservations h2 {
+	font-size: 2em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.dibs-reservations h3 {
+	font-size: 1.75em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.dibs-reservations h4 {
+	font-size: 1.35em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.dibs-reservations p {
+	margin-top: 0;
 }

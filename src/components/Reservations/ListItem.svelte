@@ -1,7 +1,4 @@
 <li>
-	<LabeledValue label="#">
-		{reservation.id}
-	</LabeledValue>
 	<LabeledValue label="Reserved by">
 		{reserver?.name ?? ''}
 	</LabeledValue>
@@ -33,10 +30,18 @@
 	li {
 		display: flex;
 		flex-wrap: wrap;
+		padding: 0.5em;
+		border: 1px solid var(--border-color);
 	}
 
-	pre {
-		font-family: inherit;
-		margin: 0;
+	li:hover {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+
+	@supports (display: grid) {
+		li {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+		}
 	}
 </style>
