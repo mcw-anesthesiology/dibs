@@ -20,7 +20,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each resources as resource}
+			{#each $resources as resource}
 				<tr on:click|stopPropagation={() => { router.goto(`/resources/${resource.id}`) }}>
 					<td>
 						<a href="/#/resources/{resource.id}">
@@ -42,14 +42,7 @@
 <script type="typescript">
 	import { router } from 'tinro';
 
-	import { Resource } from '../../types.js';
-	import { fetchResources } from '../../utils.js';
-
-	let resources: Resource[] = [];
-
-	fetchResources().then(r => {
-		resources = r;
-	});
+	import { resources } from '../../stores.js';
 </script>
 
 <style>
