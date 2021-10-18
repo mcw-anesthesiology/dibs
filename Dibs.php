@@ -99,7 +99,7 @@ class Dibs {
 			'callback' => function($request) {
 				$users = get_users(['fields' => 'all_with_meta']);
 
-				return array_values(array_map('Dibs::transformUser', $users));
+				return array_values(array_map('Dibs\Dibs::transformUser', $users));
 			}
 		]);
 
@@ -149,6 +149,7 @@ class Dibs {
 			id bigint unsigned not null auto_increment primary key,
 			name varchar(255) not null,
 			description text,
+			image varchar(255),
 			updated_at datetime default current_timestamp on update current_timestamp,
 			archived_at datetime
 		) {$charsetCollate}";
