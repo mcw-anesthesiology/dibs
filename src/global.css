@@ -13,6 +13,7 @@
 .dibs-reservations pre {
 	font-family: inherit;
 	margin: 0;
+	white-space: pre-wrap;
 }
 
 .dibs-reservations h1 {

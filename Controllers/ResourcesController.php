@@ -12,11 +12,13 @@ class ResourcesController extends BaseController {
 	const TABLE = 'resources';
 	const COLUMNS = [
 		'name',
-		'desc',
+		'description',
+		'image',
 	];
 	const REQUIRED = [
 		'name'
 	];
+	const ORDER_BY = 'name asc';
 
 	public static function getOne($request) {
 		$resource = parent::getOne($request);

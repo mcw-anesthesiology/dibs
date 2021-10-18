@@ -2,11 +2,18 @@ import { derived, writable, Writable, Readable } from 'svelte/store';
 
 import type { User, Reservation, Resource, ReserverRole } from './types.js';
 import {
+	fetchMe,
 	fetchUsers,
 	fetchReservations,
 	fetchResources,
 	fetchReservers,
 } from './utils.js';
+
+export const me: Writable<User | null> = writable(null, set => {
+	fetchMe().then(me => {
+		set(me);
+	});
+});
 
 export const users: Writable<User[]> = writable([], set => {
 	fetchUsers().then(users => {

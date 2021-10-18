@@ -9,6 +9,7 @@ export interface User {
 export interface Resource {
 	id: string; // Not sure why wordpress is giving me these as strings
 	name: string;
+	image: string | null;
 	description: string | null;
 	updated_at: Date;
 	archived_at: Date | null;
