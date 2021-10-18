@@ -3,10 +3,14 @@
 		<nav>
 			<ul>
 				<li>
-					<a href="/#/resources/">Resources</a>
+					<a href="/#/resources" use:active exact>
+						Home
+					</a>
 				</li>
 				<li>
-					<a href="/#/reservations">Reservations</a>
+					<a href="/#/reservations" use:active exact>
+						Reservations
+					</a>
 				</li>
 			</ul>
 		</nav>
@@ -27,13 +31,17 @@
 			</Route>
 		</Route>
 		<Route path="/reservations/*">
-			<Reservations />
+			<section>
+				<h2>Reservations</h2>
+
+				<Reservations />
+			</section>
 		</Route>
 	</main>
 </article>
 
 <script type="typescript">
-	import { Route, router } from 'tinro';
+	import { Route, router, active } from 'tinro';
 
 	import Resources from './Resources/Resources.svelte';
 	import Resource from './Resources/Resource.svelte';
@@ -48,5 +56,10 @@
 <style>
 	nav ul {
 		justify-content: flex-end;
+	}
+
+	nav :global(a.active) {
+		pointer-events: none;
+		opacity: 0.5;
 	}
 </style>

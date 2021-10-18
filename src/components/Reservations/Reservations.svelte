@@ -1,21 +1,14 @@
 <section>
-	<h2>Reservations</h2>
-
-	<nav>
-		<ul>
-			<li>
-				<a href="/#/reservations/add">
-					Add
-				</a>
-			</li>
-		</ul>
-	</nav>
-
-	<Route path="/add">
-		<Add {reservations} on:submit={handleAdd} on:close={handleBack} />
+	<Route path="/">
+		<a href="/#{$router.path}/reserve">
+			Add
+		</a>
+	</Route>
+	<Route path="/reserve">
+		<Add {resourceId} {reservations} on:submit={handleAdd} on:close={handleBack} />
 	</Route>
 
-	<List bind:after bind:before {reservations} />
+	<List bind:after bind:before {reservations} showResource={!resourceId} />
 </section>
 <script type="typescript">
 	import { Route, router } from 'tinro';
@@ -24,7 +17,9 @@
 	import Add from './Add.svelte';
 
 	import { Reservation } from '../../types.js';
-	import { thisMonth, dateString, fetchReservations } from '../../utils.js';
+	import { thisMonth, fetchReservations } from '../../utils.js';
+
+	export let resourceId: string = undefined;
 
 	let [after, before] = thisMonth();
 
@@ -34,15 +29,16 @@
 
 	function reload(after: Date, before: Date) {
 		fetchReservations({
-			before: before ? dateString(before) : undefined,
-			after: after ? dateString(after): undefined
+			resource_id: resourceId,
+			before,
+			after,
 		}).then(r => {
 			reservations = r;
 		});
 	}
 
 	function handleBack() {
-		router.goto('/reservations');
+		router.goto($router.path.replace('/reserve', ''));
 	}
 
 	function handleAdd() {

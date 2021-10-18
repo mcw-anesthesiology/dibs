@@ -34,7 +34,7 @@
 	{#if reservations?.length}
 		<ol>
 			{#each reservations as reservation}
-				<ListItem {reservation} />
+				<ListItem {reservation} {showResource} />
 			{/each}
 		</ol>
 	{:else}
@@ -51,6 +51,7 @@
 	import { Reservation } from '../../types.js';
 	import { thisMonth } from '../../utils.js';
 
+	export let showResource = false;
 	export let reservations: Reservation[];
 	export let after: Date;
 	export let before: Date;

@@ -3,7 +3,6 @@ import type {
 	Resource,
 	ReserverRole,
 	Reservation,
-	Status,
 	DateString,
 } from './types.js';
 
@@ -37,14 +36,29 @@ export function fetchConfig(): Record<string, any> {
 	};
 }
 
+function getParams(obj: Record<string, any>): URLSearchParams {
+	const params = new URLSearchParams();
+
+	for (const [key, val] of Object.entries(obj)) {
+		if (val) {
+			if (val instanceof Date) {
+				params.set(key, dateString(val));
+			} else {
+				params.set(key, val.toString());
+			}
+		}
+	}
+
+	return params;
+}
+
 async function fetchRecords(
 	table: string,
-	params?: Record<string, string>
+	params?: Record<string, any>
 ): Promise<any> {
 	let url = address(table);
 	if (params) {
-		const search = new URLSearchParams(params);
-		url += '?' + search.toString();
+		url += '?' + getParams(params).toString();
 	}
 
 	return fetch(url, {
@@ -52,12 +66,16 @@ async function fetchRecords(
 	}).then(r => r.json());
 }
 
+export async function fetchMe(): Promise<User> {
+	return fetchRecords('me') as Promise<User>;
+}
+
 export async function fetchUsers(): Promise<User[]> {
 	return fetchRecords('users') as Promise<User[]>;
 }
 
 export async function fetchResources(
-	params?: Record<string, string> | null
+	params?: Record<string, any> | null
 ): Promise<Resource[]> {
 	return fetchRecords('resources', params) as Promise<Resource[]>;
 }
@@ -69,13 +87,13 @@ export async function fetchResource(id: string | number): Promise<Resource> {
 }
 
 export async function fetchReservers(
-	params?: Record<string, string> | null
+	params?: Record<string, any> | null
 ): Promise<ReserverRole[]> {
 	return fetchRecords('reserver', params) as Promise<ReserverRole[]>;
 }
 
 export async function fetchReservations(
-	params?: Record<string, string> | null
+	params?: Record<string, any> | null
 ): Promise<Reservation[]> {
 	return fetchRecords('reservations', params).then(r =>
 		r.map(
@@ -96,7 +114,7 @@ export async function fetchReservation(
 	return fetchRecords(`reservations/${id}`) as Promise<Reservation>;
 }
 
-function dateTransformer(fields: string[]): (obj: any) => any {
+function dateTransformer(fields: string[]): (_: any) => any {
 	return obj => transformDates(obj, fields);
 }
 
