@@ -12,15 +12,19 @@
 			</li>
 		{/each}
 		{#if $me?.admin}
-			<li class="add-item" on:click={() => { router.goto('/resources/add'); }}>
-				<div class="add-img"><span>+</span></div>
+			{#if $router.hash === 'add'}
+				<li class="add-form">
+					<Add on:submit={handleAdd} on:close={handleClose} />
+				</li>
+			{:else}
+				<li class="add-item" on:click={() => { router.location.hash.set('add'); }}>
+					<div class="add-img"><span>+</span></div>
 
-				<a href="/#/resources/add">
-					Add new
-				</a>
-
-				<pre>Add a new resource</pre>
-			</li>
+					<a href="/#/resources#add">
+						Add new
+					</a>
+				</li>
+			{/if}
 		{/if}
 	</ul>
 </section>
@@ -29,14 +33,25 @@
 	import { router } from 'tinro';
 	import { generateFromString } from 'generate-avatar';
 
+	import Add from './Add.svelte';
+
 	import { Resource } from '../../types.js';
-	import { me, resources } from '../../stores.js';
+	import { me, resources, reloadResources } from '../../stores.js';
 
 	function getAvatar(resource: Resource): string {
 		if (resource.image) return resource.image;
 
 		const uid = `${resource.id}-${resource.name}`;
 		return `data:image/svg+xml;utf8,${generateFromString(uid)}`;
+	}
+
+	function handleAdd() {
+		reloadResources();
+		handleClose();
+	}
+
+	function handleClose() {
+		router.location.hash.clear();
 	}
 </script>
 
@@ -64,7 +79,7 @@
 		text-align: center;
 	}
 
-	.resources-list li:hover {
+	.resources-list li:not(.add-form):hover {
 		background-color: rgba(0, 0, 0, 0.05);
 		cursor: pointer;
 	}
@@ -74,6 +89,10 @@
 		width: 150px;
 		height: 150px;
 		margin-bottom: 0.5em;
+	}
+
+	img {
+		object-fit: contain;
 	}
 
 	li.add-item {

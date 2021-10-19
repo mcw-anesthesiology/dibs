@@ -22,10 +22,6 @@
 			<Route path="/">
 				<Resources />
 			</Route>
-			<Route path="/add">
-				<h2>Add resource</h2>
-				<AddResource />
-			</Route>
 			<Route path="/:id/*" let:meta>
 				<Resource id={meta.params.id} />
 			</Route>
@@ -45,7 +41,6 @@
 
 	import Resources from './Resources/Resources.svelte';
 	import Resource from './Resources/Resource.svelte';
-	import AddResource from './Resources/Add.svelte';
 	import Reservations from './Reservations/Reservations.svelte';
 
 	import '../global.css';

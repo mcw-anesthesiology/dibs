@@ -8,6 +8,8 @@
 
 .dibs-reservations label :is(input, textarea, select) {
 	display: block;
+	box-sizing: border-box;
+	width: 100%;
 }
 
 .dibs-reservations pre {
