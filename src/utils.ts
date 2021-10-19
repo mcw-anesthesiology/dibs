@@ -1,3 +1,5 @@
+import { generateFromString } from 'generate-avatar';
+
 import type {
 	User,
 	Resource,
@@ -148,4 +150,11 @@ export function thisMonth(): [Date, Date] {
 	before.setMonth(before.getMonth() + 1, 0);
 
 	return [after, before];
+}
+
+export function getAvatar(resource: Resource): string {
+	if (resource.image) return resource.image;
+
+	const uid = `${resource.id}-${resource.name}`;
+	return `data:image/svg+xml;utf8,${generateFromString(uid)}`;
 }

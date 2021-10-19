@@ -39,9 +39,10 @@
 
 	const dispatch = createEventDispatcher();
 
-	let name = '';
-	let description = '';
-	let image = '';
+	export let id: string = undefined;
+	export let name = '';
+	export let description = '';
+	export let image = '';
 
 	let loading = false;
 	let error: Error;
@@ -61,21 +62,37 @@
 		}
 	}
 
+	async function handleAdd() {
+		return fetch(address('resources'), {
+			...fetchConfig(),
+			method: 'POST',
+			body: JSON.stringify({
+				name,
+				description,
+				image,
+			})
+		});
+	}
+
+	async function handleEdit() {
+		return fetch(address(`resources/${id}`), {
+			...fetchConfig(),
+			method: 'PATCH',
+			body: JSON.stringify({
+				name,
+				description,
+				image,
+			})
+		});
+	}
+
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 
 		loading = true;
 
 		try {
-			await fetch(address('resources'), {
-				...fetchConfig(),
-				method: 'POST',
-				body: JSON.stringify({
-					name,
-					description,
-					image,
-				})
-			});
+			await (id ? handleEdit() : handleAdd());
 			dispatch('submit');
 		} catch (err) {
 			console.error(err);
@@ -97,6 +114,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: space-around;
+		padding: 1em;
 	}
 
 	form.loading {
@@ -105,6 +123,7 @@
 
 	label {
 		text-align: left;
+		width: 100%;
 	}
 
 	label ~ label {

@@ -2,7 +2,7 @@
 	<ul class="resources-list">
 		{#each $resources as resource}
 			<li on:click={() => { router.goto(`/resources/${resource.id}`); }}>
-				<img width="150" height="150" src={getAvatar(resource)} alt="" />
+				<img width="200" height="200" src={getAvatar(resource)} alt="" />
 
 				<a href="/#/resources/{resource.id}">
 					{resource.name}
@@ -31,19 +31,11 @@
 
 <script type="typescript">
 	import { router } from 'tinro';
-	import { generateFromString } from 'generate-avatar';
 
 	import Add from './Add.svelte';
 
-	import { Resource } from '../../types.js';
 	import { me, resources, reloadResources } from '../../stores.js';
-
-	function getAvatar(resource: Resource): string {
-		if (resource.image) return resource.image;
-
-		const uid = `${resource.id}-${resource.name}`;
-		return `data:image/svg+xml;utf8,${generateFromString(uid)}`;
-	}
+	import { getAvatar } from '../../utils.js';
 
 	function handleAdd() {
 		reloadResources();
@@ -74,8 +66,8 @@
 		box-sizing: border-box;
 		margin: 1em;
 		padding: 1em;
-		width: 200px;
-		min-height: 200px;
+		width: 250px;
+		min-height: 250px;
 		text-align: center;
 	}
 
@@ -86,8 +78,8 @@
 
 	li img,
 	li .add-img {
-		width: 150px;
-		height: 150px;
+		width: 200px;
+		height: 200px;
 		margin-bottom: 0.5em;
 	}
 
@@ -125,7 +117,7 @@
 		.resources-list {
 			display: grid;
 			grid-gap: 2em;
-			grid-template-columns: repeat(auto-fit, 200px);
+			grid-template-columns: repeat(auto-fit, 250px);
 		}
 
 		.resources-list li {
