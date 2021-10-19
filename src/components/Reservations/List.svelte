@@ -38,7 +38,9 @@
 			{/each}
 		</ol>
 	{:else}
-		<i>No reservations found.</i>
+		<p>
+			<i>No reservations found.</i>
+		</p>
 	{/if}
 </div>
 
@@ -95,5 +97,10 @@
 
 	ol :global(li) {
 		border: 1px solid var(--border-color);
+	}
+
+	p {
+		text-align: center;
+		margin: 2em;
 	}
 </style>

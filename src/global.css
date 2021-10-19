@@ -16,6 +16,10 @@
 	width: 100%;
 }
 
+.dibs-reservations :is(input, textarea, select, button, a):disabled {
+	cursor: not-allowed;
+}
+
 .dibs-reservations pre {
 	font-family: inherit;
 	margin: 0;
@@ -43,22 +47,6 @@
 	font-size: 1.35em;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
-}
-
-.dibs-reservations p {
-	margin-top: 0;
-}
-
-.dibs-reservations nav ul {
-	display: flex;
-	flex-wrap: wrap;
-	margin: 0;
-	padding: 0;
-}
-
-.dibs-reservations nav li {
-	display: block;
-	margin: 0.5em;
 }
 
 .dibs-reservations .button-container {
