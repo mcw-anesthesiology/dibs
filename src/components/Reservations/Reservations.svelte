@@ -1,15 +1,18 @@
 <section>
-	<Route path="/">
-		<a href="/#{$router.path}/reserve">
-			Add
-		</a>
-	</Route>
-	<Route path="/reserve">
-		<Add {resourceId} {reservations} on:submit={handleAdd} on:close={handleBack} />
-	</Route>
-
 	<List bind:after bind:before {reservations} showResource={!resourceId} />
+
+	<div>
+		<Route path="/">
+			<a class="dibs-outline-button" href="/#{$router.path}/reserve">
+				Add ➕
+			</a>
+		</Route>
+		<Route path="/reserve">
+			<Add {resourceId} {reservations} on:submit={handleAdd} on:close={handleBack} />
+		</Route>
+	</div>
 </section>
+
 <script type="typescript">
 	import { Route, router } from 'tinro';
 
@@ -46,3 +49,12 @@
 		reload(after, before);
 	}
 </script>
+
+<style>
+	div {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+</style>

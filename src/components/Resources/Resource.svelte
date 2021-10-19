@@ -12,7 +12,7 @@
 							<Add {...resource} on:submit={handleEdit} on:close={handleClose} />
 						{:else}
 							<a class="dibs-outline-button" href="/#/resources/{resource.id}#edit">
-								Edit
+								Edit 📝
 							</a>
 						{/if}
 					</div>

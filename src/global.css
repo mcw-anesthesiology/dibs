@@ -2,6 +2,10 @@
 	--border-color: #ccc;
 }
 
+.dibs-reservations fieldset {
+	border: 1px solid var(--border-color);
+}
+
 .dibs-reservations label {
 	display: inline-block;
 }
@@ -64,17 +68,40 @@
 	justify-content: center;
 }
 
+.dibs-reservations .button-container:last-child {
+	margin-bottom: 0;
+}
+
 .dibs-reservations .button-container > * {
 	margin: 0.5em;
 }
 
 .dibs-reservations .error-container {
+	padding: 1em;
+	position: relative;
 	border: 1px solid rgba(255, 0, 0, 0.4);
-	background-color: rgba(255, 0, 0, 0.01);
+	border-radius: 2px;
+	background-color: rgba(255, 0, 0, 0.05);
 	color: crimson;
 }
 
-.dibs-action-link {
+.dibs-reservations .error-container .dismiss {
+	box-sizing: border-box;
+	position: absolute;
+	top: 0.25em;
+	right: 0.25em;
+	border: 1px solid transparent;
+	background: none;
+	color: crimson;
+	padding: 0.25em 0.5em;
+	cursor: pointer;
+}
+
+.dibs-reservations .error-container .dismiss:hover,
+.dibs-reservations .error-container .dismiss:focus,
+.dibs-reservations .error-container .dismiss:active {
+	border: 1px solid rgba(255, 0, 0, 0.5);
+	background-color: rgba(255, 0, 0, 0.1);
 }
 
 .dibs-outline-button {
@@ -82,7 +109,7 @@
 	border-radius: 5px;
 	border: 2px solid;
 	border-color: currentcolor;
-	padding: 1em 2em;
+	padding: 0.5em 1em;
 	outline: none;
 	text-decoration: none;
 	cursor: pointer;

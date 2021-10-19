@@ -18,7 +18,7 @@
 				</li>
 			{:else}
 				<li class="add-item" on:click={() => { router.location.hash.set('add'); }}>
-					<div class="add-img"><span>+</span></div>
+					<div class="add-img"><span>➕</span></div>
 
 					<a href="/#/resources#add">
 						Add new

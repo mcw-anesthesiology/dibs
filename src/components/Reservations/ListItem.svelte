@@ -38,10 +38,11 @@
 		flex-wrap: wrap;
 		align-items: center;
 		padding: 0.5em;
+		border: 1px solid var(--border-color);
 	}
 
 	li:hover {
-		background-color: rgba(0, 0, 0, 0.05);
+		background-color: rgba(0, 0, 0, 0.025);
 	}
 
 	.resource {
