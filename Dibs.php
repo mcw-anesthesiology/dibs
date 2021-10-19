@@ -149,7 +149,7 @@ class Dibs {
 			id bigint unsigned not null auto_increment primary key,
 			name varchar(255) not null,
 			description text,
-			image varchar(255),
+			image text,
 			updated_at datetime default current_timestamp on update current_timestamp,
 			archived_at datetime
 		) {$charsetCollate}";
