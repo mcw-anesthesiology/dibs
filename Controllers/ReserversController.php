@@ -5,13 +5,13 @@ namespace Dibs\Controllers;
 require_once('BaseController.php');
 
 class ReserversController extends BaseController {
-	const TABLE = 'reservers_roles';
+	const TABLE = 'reservers';
 	const COLUMNS = [
-		'role',
+		'capability',
 		'resource_id',
 	];
 	const REQUIRED = [
-		'role',
+		'capability',
 		'resource_id',
 	];
 	// const DELETED_AT_COLUMN = 'archived_at';

@@ -138,7 +138,7 @@ class Dibs {
 
 		$users = $wpdb->prefix . 'users';
 		$resources = self::getTableName('resources');
-		$reservers = self::getTableName('reserver_roles');
+		$reservers = self::getTableName('reservers');
 		$reservations = self::getTableName('reservations');
 
 
@@ -158,8 +158,8 @@ class Dibs {
 
 		$sql = "CREATE TABLE IF NOT EXISTS {$reservers} (
 			id bigint unsigned not null auto_increment primary key,
-			role varchar(255) not null,
 			resource_id bigint unsigned not null,
+			capability varchar(255) not null,
 			foreign key (resource_id) references {$resources} (id)
 		) {$charsetCollate}";
 
