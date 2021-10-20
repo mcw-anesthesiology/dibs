@@ -52,7 +52,7 @@
 
 	const now = new Date();
 	let showCancel = false;
-	$: showCancel = ($me.admin || $me?.id == reservation.user_id) && reservation.reservation_start > now;
+	$: showCancel = ($me?.admin || $me?.id == reservation.user_id) && reservation.reservation_start > now;
 
 	async function handleCancel() {
 		if (!confirm(`Cancel the reservation for ${resource?.name} for ${reservation.reservation_start} – ${reservation.reservation_end}?`)) {
