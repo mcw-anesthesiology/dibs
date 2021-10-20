@@ -53,7 +53,6 @@
 	$: end = combineDateTime(date, endTime);
 
 	$: if (date && minDate && getDatePart(date) < getDatePart(minDate)) {
-		console.log('what');
 		date = undefined;
 		startTime = undefined;
 		endTime = undefined;

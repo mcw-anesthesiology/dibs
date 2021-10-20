@@ -62,9 +62,14 @@
 
 	export let showResourceSelector = false;
 	export let resourceId: number | string = undefined;
-	export let start: Date = undefined;
-	export let end: Date = undefined;
 	export let description = '';
+
+	let inputStart: Date = undefined;
+	let inputEnd: Date = undefined;
+	export { inputStart as start, inputEnd as end };
+
+	let start: Date = inputStart;
+	let end: Date = inputEnd;
 
 	let form: HTMLFormElement;
 	let reservations: Reservation[] = [];
