@@ -4,7 +4,8 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
-		"serve": "vite preview"
+		"serve": "vite preview",
+		"check": "svelte-check"
 	},
 	"devDependencies": {
 		"@rollup/plugin-typescript": "^8.2.5",
