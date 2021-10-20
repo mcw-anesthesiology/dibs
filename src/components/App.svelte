@@ -6,7 +6,7 @@
 			</a>
 		</nav>
 
-		{#if $me.admin}
+		{#if $me?.admin}
 			<nav>
 				<ul>
 					<li>
