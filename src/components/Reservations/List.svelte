@@ -3,31 +3,27 @@
 		<fieldset>
 			<legend>Reservation date</legend>
 
-			<div class="date-controls">
-				<button type="button" on:click={setThisMonth}>
-					This month
-				</button>
+			<button type="button" on:click={setThisMonth}>
+				This month
+			</button>
 
-				<div>
-					<button type="button" on:click={() => { shiftMonth(-1); }} disabled={!after || !before}>
-						← Prev month
-					</button>
+			<button type="button" on:click={() => { shiftMonth(-1); }} disabled={!after || !before}>
+				← Prev month
+			</button>
 
-					<label>
-						Start
-						<Flatpickr bind:value={after} />
-					</label>
-					–
-					<label>
-						End
-						<Flatpickr bind:value={before} />
-					</label>
+			<label>
+				Start
+				<Flatpickr bind:value={after} />
+			</label>
+			–
+			<label>
+				End
+				<Flatpickr bind:value={before} />
+			</label>
 
-					<button type="button" on:click={() => { shiftMonth(1); }} disabled={!after || !before}>
-						Next month →
-					</button>
-				</div>
-			</div>
+			<button type="button" on:click={() => { shiftMonth(1); }} disabled={!after || !before}>
+				Next month →
+			</button>
 		</fieldset>
 	</form>
 
@@ -95,10 +91,8 @@
 		justify-content: flex-end;
 	}
 
-	.date-controls {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
+	form fieldset :global(input) {
+		width: 6em;
 	}
 
 	button {
