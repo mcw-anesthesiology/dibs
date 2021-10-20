@@ -109,7 +109,7 @@
 		loadingReservations = false;
 	}
 
-	$: isValid = !loading && !loadingReservations && resourceId && start && end && start <= end && reservations && reservations.length === 0;
+	$: isValid = !loading && !loadingReservations && resourceId && start && end && start <= end && end > new Date() && reservations && reservations.length === 0;
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
