@@ -2,7 +2,7 @@
 	<nav>
 		<ul>
 			<li>
-				<a href="/#{$router.path}#list" class:active={$router.hash !== 'calendar'}>
+				<a href="/#{$router.path}" class:active={$router.hash !== 'calendar'}>
 					List view
 				</a>
 			</li>
@@ -23,7 +23,7 @@
 	{#if canReserve}
 		<div class="reserve-container">
 			<Route path="/">
-				<a class="dibs-outline-button" href="/#{$router.path}/reserve#{$router.hash}">
+				<a class="dibs-outline-button" href="/#{$router.path}/reserve{$router.hash ? `#${$router.hash}` : ''}">
 					Add ➕
 				</a>
 			</Route>
