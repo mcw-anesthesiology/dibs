@@ -7,11 +7,14 @@
 	<LabeledValue label="Reserved by">
 		{reserver?.name ?? ''}
 	</LabeledValue>
+	<LabeledValue label="Date">
+		<RichDate date={reservation.reservation_start} />
+	</LabeledValue>
 	<LabeledValue label="Start">
-		<RichDate date={reservation.reservation_start} showTime />
+		<RichDate date={reservation.reservation_start} timeOnly />
 	</LabeledValue>
 	<LabeledValue label="End">
-		<RichDate date={reservation.reservation_end} showTime />
+		<RichDate date={reservation.reservation_end} timeOnly />
 	</LabeledValue>
 	<LabeledValue label="Note">
 		<pre>{reservation.description}</pre>
@@ -92,11 +95,11 @@
 	@supports (display: grid) {
 		li {
 			display: grid;
-			grid-template-columns: repeat(5, 1fr);
+			grid-template-columns: repeat(6, 1fr);
 		}
 
 		li.showResource {
-			grid-template-columns: repeat(6, 1fr);
+			grid-template-columns: repeat(7, 1fr);
 		}
 	}
 </style>
