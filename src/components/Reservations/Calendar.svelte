@@ -11,7 +11,7 @@
 
 	import { Resource, Reservation } from '../../types.js';
 	import { address, fetchResource, transformReservation } from '../../utils.js';
-	import { userGetter } from '../../stores.js';
+	import { userGetter, resourceGetter } from '../../stores.js';
 
 	export let resourceId: string;
 
@@ -34,6 +34,13 @@
 
 		let title = user?.name ?? '';
 
+		if (!resourceId) {
+			const resource = $resourceGetter(reservation.resource_id);
+			if (resource) {
+				title = resource.name + ' — ' + title;
+			}
+		}
+
 		if (reservation.description) {
 			title += ': ' + reservation.description;
 		}
@@ -53,7 +60,7 @@
 
 	let dateClick: (_: DateClickArg) => void;
 	$: dateClick = info => {
-		if (!resource.can_reserve) return;
+		if (!resource?.can_reserve) return;
 
 		if (info.date) {
 			const params = new URLSearchParams({ start: info.date.toISOString() });
@@ -66,6 +73,13 @@
 			router.goto(path);
 		}
 	};
+
+	let extraParams: any;
+	$: extraParams = resourceId
+		? {
+			resource_id: resourceId
+		}
+		: undefined;
 
 	let options: CalendarOptions;
 	$: options = {
@@ -87,9 +101,7 @@
 		events: {
 			url: address('reservations'),
 			timeZoneParam: 'America/Chicago',
-			extraParams: {
-				resource_id: resourceId
-			}
+			extraParams,
 		},
 		eventDataTransform,
 		dateClick,
