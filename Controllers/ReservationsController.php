@@ -49,7 +49,7 @@ class ReservationsController extends BaseController {
 		$params['user_id'] = $user->ID;
 		$params['status'] = 'submitted';
 
-		if (!self::canReserve($user, $params['resource_id']))
+		if (!Dibs::canReserve($user, $params['resource_id']))
 			return new WP_Error('unauthorized', 'Unauthorized', ['status' => 403]);
 
 		foreach (static::REQUIRED as $param) {
@@ -80,22 +80,6 @@ class ReservationsController extends BaseController {
 		$result = $wpdb->get_row($wpdb->prepare($query, [$resourceId, $end, $start]), ARRAY_A);
 
 		return $result['existing'] > 0;
-	}
-
-	static function canReserve($user, $resourceId) {
-		if ($user->has_cap(Dibs::ADMIN_CAP)) return true;
-
-		global $wpdb;
-
-		$reservers = Dibs::getTableName('reserver_roles');
-
-		$query = "select role from {$reservers} where resource_id = %d";
-		$roles = $wpdb->get_results($wpdb->prepare($query, $resourceId), ARRAY_A);
-		foreach ($roles as $role) {
-			if ($user->has_cap($role)) return true;
-		}
-
-		return false;
 	}
 
 }

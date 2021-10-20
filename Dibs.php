@@ -133,6 +133,22 @@ class Dibs {
 		}, ARRAY_FILTER_USE_KEY);
 	}
 
+	static function canReserve($user, $resourceId) {
+		if ($user->has_cap(Dibs::ADMIN_CAP)) return true;
+
+		global $wpdb;
+
+		$reservers = Dibs::getTableName('reservers');
+
+		$query = "select capability from {$reservers} where resource_id = %d";
+		$reservers = $wpdb->get_results($wpdb->prepare($query, $resourceId));
+		foreach ($reservers as $reserver) {
+			if ($user->has_cap($reserver->capability)) return true;
+		}
+
+		return false;
+	}
+
 	public function createTables() {
 		global $wpdb;
 

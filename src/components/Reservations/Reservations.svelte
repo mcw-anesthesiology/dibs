@@ -1,16 +1,18 @@
 <section>
 	<List bind:after bind:before {reservations} showResource={!resourceId} />
 
-	<div>
-		<Route path="/">
-			<a class="dibs-outline-button" href="/#{$router.path}/reserve">
-				Add ➕
-			</a>
-		</Route>
-		<Route path="/reserve">
-			<Add {resourceId} {reservations} on:submit={handleAdd} on:close={handleBack} />
-		</Route>
-	</div>
+	{#if canReserve}
+		<div>
+			<Route path="/">
+				<a class="dibs-outline-button" href="/#{$router.path}/reserve">
+					Add ➕
+				</a>
+			</Route>
+			<Route path="/reserve">
+				<Add {resourceId} {reservations} on:submit={handleAdd} on:close={handleBack} />
+			</Route>
+		</div>
+	{/if}
 </section>
 
 <script type="typescript">
@@ -23,6 +25,7 @@
 	import { thisMonth, fetchReservations } from '../../utils.js';
 
 	export let resourceId: string = undefined;
+	export let canReserve = false;
 
 	let [after, before] = thisMonth();
 

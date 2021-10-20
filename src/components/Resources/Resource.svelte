@@ -27,7 +27,7 @@
 		<section>
 			<h3>Reservations</h3>
 
-			<Reservations resourceId={id} />
+			<Reservations resourceId={id} canReserve={resource.can_reserve} />
 		</section>
 	{/if}
 </section>
@@ -39,15 +39,23 @@
 	import Reservations from '../Reservations/Reservations.svelte';
 
 	import { Resource } from '../../types.js';
-	import { me, resourceGetter, reloadResources } from '../../stores.js';
-	import { getAvatar } from '../../utils.js';
+	import { me, reloadResources } from '../../stores.js';
+	import { fetchResource, getAvatar } from '../../utils.js';
 
 	export let id: string;
 
 	let resource: Resource = null;
-	$: resource = $resourceGetter(id);
+
+	$: getResource(id);
+
+	function getResource(id: string) {
+		fetchResource(id).then(r => {
+			resource = r;
+		});
+	}
 
 	function handleEdit() {
+		getResource(id);
 		reloadResources();
 		handleClose();
 	}

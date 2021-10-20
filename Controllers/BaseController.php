@@ -140,7 +140,7 @@ class BaseController {
 		}
 
 		$query = "SELECT * FROM {$table} WHERE id = %d";
-		$result = $wpdb->get_row($wpdb->prepare($query, $id));
+		$result = $wpdb->get_row($wpdb->prepare($query, $id), ARRAY_A);
 
 		if (!empty($result))
 			return self::decodeJsonCols($result);

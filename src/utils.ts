@@ -3,7 +3,7 @@ import { generateFromString } from 'generate-avatar';
 import type {
 	User,
 	Resource,
-	ReserverRole,
+	Reserver,
 	Reservation,
 	DateString,
 } from './types.js';
@@ -90,8 +90,8 @@ export async function fetchResource(id: string | number): Promise<Resource> {
 
 export async function fetchReservers(
 	params?: Record<string, any> | null
-): Promise<ReserverRole[]> {
-	return fetchRecords('reserver', params) as Promise<ReserverRole[]>;
+): Promise<Reserver[]> {
+	return fetchRecords('reservers', params) as Promise<Reserver[]>;
 }
 
 export async function fetchReservations(

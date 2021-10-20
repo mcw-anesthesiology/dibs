@@ -16,10 +16,10 @@ export interface Resource {
 	can_reserve?: boolean;
 }
 
-export interface ReserverRole {
+export interface Reserver {
 	id: string;
-	role: string;
 	resource_id: string;
+	capability: string;
 }
 
 export interface Reservation {

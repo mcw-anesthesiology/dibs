@@ -1,6 +1,6 @@
 import { derived, writable, Writable, Readable } from 'svelte/store';
 
-import type { User, Reservation, Resource, ReserverRole } from './types.js';
+import type { User, Reservation, Resource, Reserver } from './types.js';
 import {
 	fetchMe,
 	fetchUsers,
@@ -56,11 +56,37 @@ export const reservations: Writable<Reservation[]> = writable([], set => {
 	});
 });
 
-export const reservers: Writable<ReserverRole[]> = writable([], set => {
+export const reservers: Writable<Reserver[]> = writable([], set => {
 	fetchReservers().then(reservers => {
 		set(reservers);
 	});
 });
+
+export const resourceReserversMap: Readable<Map<string, Reserver[]>> = derived(
+	reservers,
+	$reservers => {
+		const map = new Map();
+
+		for (const reserver of $reservers) {
+			const resourceId = reserver.resource_id.toString();
+			let arr = map.get(resourceId);
+			if (!arr) {
+				arr = [];
+				map.set(resourceId, arr);
+			}
+			arr.push(reserver);
+		}
+
+		return map;
+	}
+);
+
+export const resourceReserversGetter: Readable<
+	(_: number | string) => Reserver[]
+> = derived(
+	resourceReserversMap,
+	$map => (id: number | string) => $map.get(id.toString()) || []
+);
 
 export function reloadResources() {
 	updateStore(resources, fetchResources);

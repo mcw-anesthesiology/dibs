@@ -15,6 +15,11 @@
 						</a>
 					</li>
 					<li>
+						<a href="/#/reservers" use:active exact>
+							Reservers
+						</a>
+					</li>
+					<li>
 						<a href="/#/reservations" use:active exact>
 							Reservations
 						</a>
@@ -41,6 +46,9 @@
 				<Reservations />
 			</section>
 		</Route>
+		<Route path="/reservers">
+			<Reservers />
+		</Route>
 	</main>
 </article>
 
@@ -50,6 +58,7 @@
 	import Resources from './Resources/Resources.svelte';
 	import Resource from './Resources/Resource.svelte';
 	import Reservations from './Reservations/Reservations.svelte';
+	import Reservers from './Reservers.svelte';
 
 	import { me } from '../stores.js';
 
