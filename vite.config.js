@@ -34,7 +34,11 @@ export default ({ mode }) => {
 			},
 		},
 		optimizeDeps: {
+			include: ['@fullcalendar/common'],
 			exclude: ['tinro'],
+		},
+		resolve: {
+			dedupe: ['@fullcalendar/common'],
 		},
 	};
 };

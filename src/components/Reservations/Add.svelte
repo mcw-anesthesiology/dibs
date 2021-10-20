@@ -1,4 +1,4 @@
-<form on:submit={handleSubmit} class:loading>
+<form bind:this={form} on:submit={handleSubmit} class:loading>
 	<div class="controls">
 		{#if showResourceSelector}
 			<label class="resource">
@@ -51,7 +51,7 @@
 </form>
 
 <script type="typescript">
-	import { createEventDispatcher } from 'svelte';
+	import { onMount, createEventDispatcher } from 'svelte';
 
 	import DateTimeInput from '../DateTimeInput.svelte';
 	import ListItem from './ListItem.svelte';
@@ -66,9 +66,16 @@
 	export let end: Date = undefined;
 	export let description = '';
 
+	let form: HTMLFormElement;
 	let reservations: Reservation[] = [];
 
 	const dispatch = createEventDispatcher();
+
+	onMount(() => {
+		if (form) {
+			form.scrollIntoView();
+		}
+	});
 
 	let loading = false;
 	let loadingReservations = false;

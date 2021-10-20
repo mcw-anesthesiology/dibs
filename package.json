@@ -21,9 +21,15 @@
 		"vite": "^2.6.5"
 	},
 	"dependencies": {
+		"@fullcalendar/common": "^5.10.0",
+		"@fullcalendar/core": "^5.10.0",
+		"@fullcalendar/daygrid": "^5.10.0",
+		"@fullcalendar/interaction": "^5.10.0",
+		"@fullcalendar/timegrid": "^5.10.0",
 		"flatpickr": "^4.6.9",
 		"generate-avatar": "^1.4.10",
 		"svelte-flatpickr": "^3.2.3",
+		"svelte-fullcalendar": "^1.1.1",
 		"tinro": "^0.6.7"
 	}
 }

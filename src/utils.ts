@@ -79,13 +79,13 @@ export async function fetchUsers(): Promise<User[]> {
 export async function fetchResources(
 	params?: Record<string, any> | null
 ): Promise<Resource[]> {
-	return fetchRecords('resources', params) as Promise<Resource[]>;
+	return fetchRecords('resources', params).then(r =>
+		r.map(transformResource)
+	);
 }
 
 export async function fetchResource(id: string | number): Promise<Resource> {
-	return fetchRecords(`resources/${id}`).then(
-		dateTransformer(['updated_at', 'archived_at'])
-	) as Promise<Resource>;
+	return fetchRecords(`resources/${id}`).then(transformResource);
 }
 
 export async function fetchReservers(
@@ -98,26 +98,28 @@ export async function fetchReservations(
 	params?: Record<string, any> | null
 ): Promise<Reservation[]> {
 	return fetchRecords('reservations', params).then(r =>
-		r.map(
-			dateTransformer([
-				'reservation_start',
-				'reservation_end',
-				'created_at',
-				'updated_at',
-				'deleted_at',
-			])
-		)
-	) as Promise<Reservation[]>;
+		r.map(transformReservation)
+	);
 }
 
 export async function fetchReservation(
 	id: string | number
 ): Promise<Reservation> {
-	return fetchRecords(`reservations/${id}`) as Promise<Reservation>;
+	return fetchRecords(`reservations/${id}`).then(transformReservation);
 }
 
-function dateTransformer(fields: string[]): (_: any) => any {
-	return obj => transformDates(obj, fields);
+export function transformResource(obj: any): Resource {
+	return transformDates(obj, ['updated_at', 'archived_at']) as Resource;
+}
+
+export function transformReservation(obj: any): Reservation {
+	return transformDates(obj, [
+		'reservation_start',
+		'reservation_end',
+		'created_at',
+		'updated_at',
+		'deleted_at',
+	]) as Reservation;
 }
 
 function transformDates(obj: any, keys: string[]): any {
