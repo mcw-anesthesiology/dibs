@@ -139,9 +139,19 @@ export function parseDate(date: DateString): Date {
 	return d;
 }
 
+export function getDatePart(date: Date): Date {
+	const d = new Date(date);
+	d.setHours(0, 0, 0, 0);
+	return d;
+}
+
 export function dateString(date: Date): string {
 	const s = date.toISOString();
 	return s.substring(0, s.indexOf('T'));
+}
+
+export function dateStringLocal(date: Date): string {
+	return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
 export function dateTimeString(date: Date): string {

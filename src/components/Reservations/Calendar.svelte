@@ -57,7 +57,12 @@
 
 		if (info.date) {
 			const params = new URLSearchParams({ start: info.date.toISOString() });
-			const path = `${$router.path}/reserve?${params}#calendar`;
+			let path = $router.path;
+			if (!path.endsWith('/reserve')) {
+				path += '/reserve';
+			}
+			path += `?${params}#calendar`;
+
 			router.goto(path);
 		}
 	};

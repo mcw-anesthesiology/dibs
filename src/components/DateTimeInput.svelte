@@ -25,10 +25,12 @@
 	import Flatpickr from 'svelte-flatpickr';
 	import 'flatpickr/dist/flatpickr.css';
 
+	import { getDatePart, dateStringLocal } from '../utils.js';
+
 	export let label = 'Date';
 	export let required = false;
 	export let disabled = false;
-	export let minDate: Date | string = undefined;
+	export let minDate: Date = undefined;
 
 	export let start: Date = undefined;
 	export let end: Date = undefined;
@@ -50,8 +52,22 @@
 	$: start = combineDateTime(date, startTime);
 	$: end = combineDateTime(date, endTime);
 
+	$: if (date && minDate && getDatePart(date) < getDatePart(minDate)) {
+		console.log('what');
+		date = undefined;
+		startTime = undefined;
+		endTime = undefined;
+		start = undefined;
+		end = undefined;
+	}
+
+	$: if (!date) {
+		startTime = undefined;
+		endTime = undefined;
+	}
+
 	const dateOptions = {
-		minDate
+		minDate: dateStringLocal(minDate)
 	};
 
 	const startOptions = {

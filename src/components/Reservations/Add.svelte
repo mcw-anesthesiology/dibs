@@ -12,7 +12,7 @@
 			</label>
 		{/if}
 
-		<DateTimeInput label="Reservation time" bind:start bind:end required disabled={loading} minDate={dateString(new Date())} />
+		<DateTimeInput label="Reservation time" bind:start bind:end required disabled={loading} minDate={new Date()} />
 
 		<label class="note">
 			Note
@@ -57,7 +57,7 @@
 	import ListItem from './ListItem.svelte';
 
 	import { Reservation } from '../../types.js';
-	import { address, fetchConfig, fetchReservations, dateString, dateTimeString } from '../../utils.js';
+	import { address, fetchConfig, fetchReservations, dateTimeString } from '../../utils.js';
 	import { resources } from '../../stores.js';
 
 	export let showResourceSelector = false;

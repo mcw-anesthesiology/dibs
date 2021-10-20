@@ -20,9 +20,8 @@
 		<List bind:this={list} {resourceId} />
 	{/if}
 
-
 	{#if canReserve}
-		<div>
+		<div class="reserve-container">
 			<Route path="/">
 				<a class="dibs-outline-button" href="/#{$router.path}/reserve#{$router.hash}">
 					Add ➕
@@ -82,5 +81,9 @@
 	nav a.active {
 		pointer-events: none;
 		opacity: 0.5;
+	}
+
+	.reserve-container {
+		margin-top: 2em;
 	}
 </style>
