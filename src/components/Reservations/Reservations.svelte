@@ -33,10 +33,6 @@
 
 	$: reload(after, before);
 
-	function handleReload() {
-		reload(after, before);
-	}
-
 	function reload(after: Date, before: Date) {
 		fetchReservations({
 			resource_id: resourceId,
@@ -47,13 +43,17 @@
 		});
 	}
 
+	function handleReload() {
+		reload(after, before);
+	}
+
 	function handleBack() {
 		router.goto($router.path.replace('/reserve', ''));
 	}
 
 	function handleAdd() {
 		handleBack();
-		reload(after, before);
+		handleReload();
 	}
 </script>
 

@@ -61,12 +61,13 @@
 				...fetchConfig(),
 				method: 'DELETE'
 			});
-			dispatch('reload');
 		} catch (err) {
 			console.error(err);
 			// TODO: Better alert
 			alert('There was a problem cancelling the reservation.');
 		}
+
+		dispatch('reload');
 	}
 </script>
 
