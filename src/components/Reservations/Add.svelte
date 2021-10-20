@@ -12,7 +12,7 @@
 			</label>
 		{/if}
 
-		<DateTimeInput label="Reservation time" bind:start bind:end required disabled={loading} minDate={new Date()} />
+		<DateTimeInput label="Reservation time" bind:start bind:end required disabled={loading} minDate={dateString(new Date())} />
 
 		<label class="note">
 			Note
@@ -20,13 +20,13 @@
 		</label>
 	</div>
 
-	{#if existingReservations.length > 0}
+	{#if reservations.length > 0}
 		<aside class="error-container">
 			<p>Sorry, it is unavailable during that time.</p>
 
 			<p>Existing reservations:</p>
 			<ol>
-				{#each existingReservations as reservation}
+				{#each reservations as reservation}
 					<ListItem {reservation} />
 				{/each}
 			</ol>
@@ -57,27 +57,47 @@
 	import ListItem from './ListItem.svelte';
 
 	import { Reservation } from '../../types.js';
-	import { address, fetchConfig } from '../../utils.js';
+	import { address, fetchConfig, fetchReservations, dateString, dateTimeString } from '../../utils.js';
 	import { resources } from '../../stores.js';
 
 	export let showResourceSelector = false;
 	export let resourceId: number | string = undefined;
-	export let reservations: Reservation[];
 	export let start: Date = undefined;
 	export let end: Date = undefined;
 	export let description = '';
 
+	let reservations: Reservation[] = [];
+
 	const dispatch = createEventDispatcher();
 
 	let loading = false;
+	let loadingReservations = false;
 	let error: Error = null;
 
 	let isValid = false;
-	let existingReservations: Reservation[] = [];
-	$: existingReservations = reservations.filter(r =>
-			r.reservation_start <= end && r.reservation_end >= start
-		);
-	$: isValid = resourceId && start && end && start <= end && reservations && existingReservations.length === 0;
+
+	$: reload(start, end);
+
+	async function reload(after: Date, before: Date) {
+		if (!after || !before) {
+			reservations = [];
+			return;
+		}
+
+		loadingReservations = true;
+		try {
+			reservations = await fetchReservations({
+				resource_id: resourceId,
+				before: dateTimeString(before),
+				after: dateTimeString(after),
+			});
+		} catch (err) {
+			console.error(err);
+		}
+		loadingReservations = false;
+	}
+
+	$: isValid = !loading && !loadingReservations && resourceId && start && end && start <= end && reservations && reservations.length === 0;
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
@@ -90,8 +110,8 @@
 				method: 'POST',
 				body: JSON.stringify({
 					resource_id: resourceId,
-					reservation_start: start,
-					reservation_end: end,
+					reservation_start: dateTimeString(start),
+					reservation_end: dateTimeString(end),
 					description,
 				})
 			});

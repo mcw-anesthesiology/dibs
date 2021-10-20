@@ -1,5 +1,5 @@
 <section>
-	<List bind:after bind:before {reservations} showResource={!resourceId} on:reload={handleReload} />
+	<List bind:this={list} {resourceId} />
 
 	{#if canReserve}
 		<div>
@@ -9,7 +9,7 @@
 				</a>
 			</Route>
 			<Route path="/reserve">
-				<Add {resourceId} {reservations} on:submit={handleAdd} on:close={handleBack} />
+				<Add {resourceId} on:submit={handleAdd} on:close={handleBack} />
 			</Route>
 		</div>
 	{/if}
@@ -21,39 +21,18 @@
 	import List from './List.svelte';
 	import Add from './Add.svelte';
 
-	import { Reservation } from '../../types.js';
-	import { thisMonth, fetchReservations } from '../../utils.js';
-
 	export let resourceId: string = undefined;
 	export let canReserve = false;
 
-	let [after, before] = thisMonth();
-
-	let reservations: Reservation[] = [];
-
-	$: reload(after, before);
-
-	function reload(after: Date, before: Date) {
-		fetchReservations({
-			resource_id: resourceId,
-			before,
-			after,
-		}).then(r => {
-			reservations = r;
-		});
-	}
-
-	function handleReload() {
-		reload(after, before);
-	}
+	let list: List;
 
 	function handleBack() {
 		router.goto($router.path.replace('/reserve', ''));
 	}
 
 	function handleAdd() {
+		list.handleReload();
 		handleBack();
-		handleReload();
 	}
 </script>
 

@@ -28,7 +28,7 @@
 	export let label = 'Date';
 	export let required = false;
 	export let disabled = false;
-	export let minDate: Date = undefined;
+	export let minDate: Date | string = undefined;
 
 	export let start: Date = undefined;
 	export let end: Date = undefined;
@@ -37,7 +37,11 @@
 	let startTime: Date = start;
 	let endTime: Date = end;
 
-	$: if (startTime && !endTime) {
+	$: setEndTime(startTime);
+
+	function setEndTime(startTime: Date) {
+		if (!startTime) return;
+
 		const d = new Date(startTime);
 		d.setMinutes(d.getMinutes() + 30);
 		endTime = d;

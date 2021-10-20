@@ -28,14 +28,16 @@ class ReservationsController extends BaseController {
 	const DELETED_AT_COLUMN = 'deleted_at';
 
 	public static function get($request, $whereClauses = [], $whereValues = []) {
-		if (!empty($request->get_param('after'))) {
+		$after = $request->get_param('start') ?? $request->get_param('after');
+		if (!empty($after)) {
 			$whereClauses[] = 'reservation_end >= %s';
-			$whereValues[] = $request->get_param('after');
+			$whereValues[] = $after;
 		}
 
-		if (!empty($request->get_param('before'))) {
+		$before = $request->get_param('end') ?? $request->get_param('before');
+		if (!empty($before)) {
 			$whereClauses[] = 'reservation_start <= %s';
-			$whereValues[] = $request->get_param('before');
+			$whereValues[] = $before;
 		}
 
 		return parent::get($request, $whereClauses, $whereValues);

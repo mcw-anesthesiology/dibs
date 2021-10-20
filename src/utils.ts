@@ -130,8 +130,11 @@ function transformDates(obj: any, keys: string[]): any {
 	return obj;
 }
 
+// WordPress ignores timezones, assume received date is UTC
 export function parseDate(date: DateString): Date {
-	return new Date(date);
+	const d = new Date(date);
+	d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+	return d;
 }
 
 export function dateString(date: Date): string {
@@ -140,7 +143,7 @@ export function dateString(date: Date): string {
 }
 
 export function dateTimeString(date: Date): string {
-	return date.toISOString().replace('T', ' ');
+	return date.toISOString();
 }
 
 export function thisMonth(): [Date, Date] {

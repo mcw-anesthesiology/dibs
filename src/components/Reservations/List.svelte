@@ -34,7 +34,7 @@
 	{#if reservations?.length}
 		<ol>
 			{#each reservations as reservation}
-				<ListItem {reservation} {showResource} on:reload />
+				<ListItem {reservation} showResource={!resourceId} on:reload={handleReload} />
 			{/each}
 		</ol>
 	{:else}
@@ -51,12 +51,12 @@
 	import ListItem from './ListItem.svelte';
 
 	import { Reservation } from '../../types.js';
-	import { thisMonth } from '../../utils.js';
+	import { thisMonth, fetchReservations } from '../../utils.js';
 
-	export let showResource = false;
-	export let reservations: Reservation[];
-	export let after: Date;
-	export let before: Date;
+	export let resourceId: string = undefined;
+	export let reservations: Reservation[] = [];
+
+	let [after, before] = thisMonth();
 
 	function shiftMonth(num: number) {
 		if (!after || !before) return;
@@ -72,6 +72,20 @@
 		const [a, b] = thisMonth();
 		after = a;
 		before = b;
+	}
+
+	$: reload(after, before);
+
+	async function reload(after: Date, before: Date) {
+		reservations = await fetchReservations({
+			resource_id: resourceId,
+			before,
+			after,
+		});
+	}
+
+	export function handleReload() {
+		reload(after, before);
 	}
 </script>
 
