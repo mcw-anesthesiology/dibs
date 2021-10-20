@@ -92,15 +92,10 @@
 	@supports (display: grid) {
 		li {
 			display: grid;
-			grid-template-columns: repeat(4, 1fr);
-		}
-
-		li.showResource,
-		li.showCancel {
 			grid-template-columns: repeat(5, 1fr);
 		}
 
-		li.showResource.showCancel {
+		li.showResource {
 			grid-template-columns: repeat(6, 1fr);
 		}
 	}
