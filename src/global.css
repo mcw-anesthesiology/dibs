@@ -105,7 +105,7 @@
 
 .dibs-outline-button[disabled] {
 	opacity: 0.9em;
-	background-color: #dedede;
+	background-color: #ccc;
 	cursor: not-allowed;
 }
 
@@ -113,5 +113,5 @@
 .dibs-outline-button:focus,
 .dibs-outline-button:active {
 	text-decoration: none;
-	background-color: #eee;
+	background-color: #ddd;
 }
