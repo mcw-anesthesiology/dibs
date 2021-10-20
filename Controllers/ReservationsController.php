@@ -16,7 +16,6 @@ class ReservationsController extends BaseController {
 		'reservation_start',
 		'reservation_end',
 		'description',
-		'status',
 	];
 	const REQUIRED = [
 		'user_id',
@@ -49,7 +48,6 @@ class ReservationsController extends BaseController {
 		$params = static::getParams($request->get_params());
 		$user = wp_get_current_user();
 		$params['user_id'] = $user->ID;
-		$params['status'] = 'submitted';
 
 		if (!Dibs::canReserve($user, $params['resource_id']))
 			return new WP_Error('unauthorized', 'Unauthorized', ['status' => 403]);

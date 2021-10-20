@@ -29,13 +29,7 @@ export interface Reservation {
 	reservation_start: Date;
 	reservation_end: Date;
 	description: string | null;
-	status: Status;
 	created_at: Date;
 	updated_at: Date;
 	deleted_at: Date | null;
-}
-
-export enum Status {
-	Submitted = 'submitted',
-	Cancelled = 'cancelled',
 }
