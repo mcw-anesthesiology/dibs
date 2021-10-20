@@ -12,7 +12,7 @@
 			</label>
 		{/if}
 
-		<DateTimeInput label="Reservation time" bind:start bind:end required disabled={loading} />
+		<DateTimeInput label="Reservation time" bind:start bind:end required disabled={loading} minDate={new Date()} />
 
 		<label class="note">
 			Note

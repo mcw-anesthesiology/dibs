@@ -1,7 +1,7 @@
-<li class:showResource>
+<li class:showResource class:showCancel>
 	{#if showResource}
 		<span class="resource">
-			{$resourceGetter(reservation.resource_id)?.name ?? ''}
+			{resource?.name ?? ''}
 		</span>
 	{/if}
 	<LabeledValue label="Reserved by">
@@ -16,20 +16,58 @@
 	<LabeledValue label="Note">
 		<pre>{reservation.description}</pre>
 	</LabeledValue>
+
+	{#if showCancel}
+		<div class="button-container">
+			<button type="button" on:click={handleCancel}>
+				Cancel
+			</button>
+		</div>
+	{/if}
 </li>
 
 <script type="typescript">
+	import { createEventDispatcher } from 'svelte';
+
 	import LabeledValue from '../LabeledValue.svelte';
 	import RichDate from '../RichDate.svelte';
 
-	import { User, Reservation } from '../../types.js';
-	import { resourceGetter, userGetter } from '../../stores.js';
+	import { User, Resource, Reservation } from '../../types.js';
+	import { me, resourceGetter, userGetter } from '../../stores.js';
+	import { address, fetchConfig } from '../../utils.js';
 
 	export let reservation: Reservation;
 	export let showResource = false;
 
+	const dispatch = createEventDispatcher();
+
 	let reserver: User;
 	$: reserver = $userGetter(reservation.user_id);
+
+	let resource: Resource;
+	$: resource = $resourceGetter(reservation.resource_id);
+
+	const now = new Date();
+	let showCancel = false;
+	$: showCancel = ($me.admin || $me?.id == reservation.user_id) && reservation.reservation_start > now;
+
+	async function handleCancel() {
+		if (!confirm(`Cancel the reservation for ${resource?.name} for ${reservation.reservation_start} – ${reservation.reservation_end}?`)) {
+			return;
+		}
+
+		try {
+			fetch(address(`reservations/${reservation.id}`), {
+				...fetchConfig(),
+				method: 'DELETE'
+			});
+			dispatch('reload');
+		} catch (err) {
+			console.error(err);
+			// TODO: Better alert
+			alert('There was a problem cancelling the reservation.');
+		}
+	}
 </script>
 
 <style>
@@ -56,8 +94,13 @@
 			grid-template-columns: repeat(4, 1fr);
 		}
 
-		li.showResource {
+		li.showResource,
+		li.showCancel {
 			grid-template-columns: repeat(5, 1fr);
+		}
+
+		li.showResource.showCancel {
+			grid-template-columns: repeat(6, 1fr);
 		}
 	}
 </style>

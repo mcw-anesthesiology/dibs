@@ -75,11 +75,32 @@ class ReservationsController extends BaseController {
 		$reservations = Dibs::getTableName(static::TABLE);
 
 		$query = "select count(id) as existing from {$reservations}
-			where resource_id = %d and reservation_start < %s and reservation_end > %s";
+			where resource_id = %d and reservation_start < %s and reservation_end > %s and deleted_at is null";
 
 		$result = $wpdb->get_row($wpdb->prepare($query, [$resourceId, $end, $start]), ARRAY_A);
 
 		return $result['existing'] > 0;
 	}
 
+	public static function delete($request) {
+		global $wpdb;
+
+		$user = wp_get_current_user();
+		$id = $request->get_param('id');
+
+		if (empty($id))
+			return new WP_Error('missing_params', 'Missing required parameters', ['status' => 400]);
+
+		$reservations = Dibs::getTableName(static::TABLE);
+		$params = ['id' => $id];
+		if (!$user->has_cap(Dibs::ADMIN_CAP)) {
+			$params['user_id'] = $user->id;
+		}
+
+		$updated = $wpdb->update($reservations, [static::DELETED_AT_COLUMN => 'current_timestamp'], $params);
+
+		if (!$updated) {
+			return new WP_Error('unauthorized', 'Unauthorized', 403);
+		}
+	}
 }

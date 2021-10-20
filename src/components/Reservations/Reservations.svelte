@@ -1,5 +1,5 @@
 <section>
-	<List bind:after bind:before {reservations} showResource={!resourceId} />
+	<List bind:after bind:before {reservations} showResource={!resourceId} on:reload={handleReload} />
 
 	{#if canReserve}
 		<div>
@@ -32,6 +32,10 @@
 	let reservations: Reservation[] = [];
 
 	$: reload(after, before);
+
+	function handleReload() {
+		reload(after, before);
+	}
 
 	function reload(after: Date, before: Date) {
 		fetchReservations({

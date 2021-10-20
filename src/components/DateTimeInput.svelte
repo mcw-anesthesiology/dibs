@@ -4,7 +4,7 @@
 	<div class="controls-container">
 		<label class="date-control">
 			Date
-			<Flatpickr bind:value={date} {required} {disabled} />
+			<Flatpickr options={dateOptions} bind:value={date} {required} {disabled} />
 		</label>
 
 		<div class="times-container">
@@ -28,6 +28,7 @@
 	export let label = 'Date';
 	export let required = false;
 	export let disabled = false;
+	export let minDate: Date = undefined;
 
 	export let start: Date = undefined;
 	export let end: Date = undefined;
@@ -45,11 +46,15 @@
 	$: start = combineDateTime(date, startTime);
 	$: end = combineDateTime(date, endTime);
 
+	const dateOptions = {
+		minDate
+	};
+
 	const startOptions = {
 		enableTime: true,
 		noCalendar: true,
 		minuteIncrement: 15,
-		dateFormat: 'h:i K'
+		dateFormat: 'h:i K',
 	};
 
 	let endOptions = {};

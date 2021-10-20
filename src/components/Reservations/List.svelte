@@ -34,7 +34,7 @@
 	{#if reservations?.length}
 		<ol>
 			{#each reservations as reservation}
-				<ListItem {reservation} {showResource} />
+				<ListItem {reservation} {showResource} on:reload />
 			{/each}
 		</ol>
 	{:else}
