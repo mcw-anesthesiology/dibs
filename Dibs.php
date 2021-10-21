@@ -198,16 +198,17 @@ class Dibs {
 	}
 
 	function app_shortcode($atts) {
-		wp_enqueue_script("dibs",
+		wp_enqueue_script(
+			"dibs",
 			plugin_dir_url(__FILE__) . self::SCRIPT_PATH,
 		   	null,
-			hash_file('md5', __DIR__ . self::SCRIPT_PATH)
+			hash_file('md5', __DIR__ . '/' . self::SCRIPT_PATH)
 		);
 		wp_enqueue_style(
 			"dibs",
 			plugin_dir_url(__FILE__) . self::STYLE_PATH,
 			null,
-			hash_file('md5', __DIR__ . self::STYLE_PATH)
+			hash_file('md5', __DIR__ . '/' . self::STYLE_PATH)
 		);
 
 		return '<div id="dibs-app"></div>';
