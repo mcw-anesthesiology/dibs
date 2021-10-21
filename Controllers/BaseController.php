@@ -48,6 +48,14 @@ class BaseController {
 						return $val ? 1 : 0;
 					}
 
+					if (is_int($val) || is_float($val)) {
+						return $val;
+					}
+
+					if (is_numeric($val)) {
+						return strpos($val, '.') === false ? intval($val) : floatval($val);
+					}
+
 					if (empty($val)) return null;
 
 					return $val;
