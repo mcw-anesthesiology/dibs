@@ -48,6 +48,8 @@ class BaseController {
 						return $val ? 1 : 0;
 					}
 
+					if (empty($val)) return null;
+
 					return $val;
 				},
 				array_filter(
@@ -155,7 +157,7 @@ class BaseController {
 		if (!$user->has_cap(Dibs::ADMIN_CAP))
 			return new WP_Error('unauthorized', 'Unauthorized', ['status' => 403]);
 
-		$params = $request->get_params();
+		$params = static::getParams($request->get_params());
 		foreach (static::REQUIRED as $param) {
 			if (empty($params[$param])) {
 				return new WP_Error('missing_params', 'Missing required parameters', ['status' => 400]);
@@ -163,7 +165,7 @@ class BaseController {
 		}
 
 		$table = Dibs::getTableName(static::TABLE);
-		$wpdb->insert($table, static::getParams($request->get_params()));
+		$wpdb->insert($table, $params);
 
 		$query = "SELECT * FROM {$table} WHERE id = %d";
 		return self::decodeJsonCols($wpdb->get_row($wpdb->prepare($query, [$wpdb->insert_id]), ARRAY_A));
