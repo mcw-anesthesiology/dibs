@@ -4,14 +4,20 @@
 	<table>
 		<thead>
 			<tr>
-				<th>Name</th>
+				<th colspan="2">Resource</th>
 				<th>Capabilities</th>
 			</tr>
 		</thead>
 		<tbody>
 			{#each $resources as resource}
 				<tr>
-					<th>{resource.name}</th>
+					<th class="resource-cell">
+						<span class="resource-color" style="background-color: {getColor(resource)}"></span>
+						{resource.name}
+					</th>
+					<td class="img-cell">
+						<img width="150" height="150" src={getAvatar(resource)} alt="" />
+					</td>
 					<td>
 						<ul>
 							<li><code>{DIBS_ADMIN_CAP}</code></li>
@@ -64,7 +70,7 @@
 </section>
 
 <script type="typescript">
-	import { address, fetchConfig } from '../utils.js';
+	import { address, fetchConfig, getColor, getAvatar } from '../utils.js';
 	import { resources, resourceReserversGetter, reloadReservers } from '../stores.js';
 
 	const DIBS_ADMIN_CAP = 'dibs_admin';
@@ -136,6 +142,29 @@
 
 	th {
 		text-align: left;
+	}
+
+	.resource-cell {
+		position: relative;
+		border-right: none;
+		font-size: 1.25em;
+	}
+
+	.resource-color {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 5px;
+	}
+
+	.img-cell {
+		border-left: none;
+		text-align: right;
+	}
+
+	img {
+		object-fit: contain;
 	}
 
 	ul {
