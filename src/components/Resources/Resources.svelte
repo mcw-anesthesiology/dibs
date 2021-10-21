@@ -1,7 +1,7 @@
 <section>
 	<ul class="resources-list">
 		{#each $resources as resource}
-			<li on:click={() => { router.goto(`/resources/${resource.id}`); }}>
+			<li style="border-color: {getColor(resource)}" on:click={() => { router.goto(`/resources/${resource.id}`); }}>
 				<img width="200" height="200" src={getAvatar(resource)} alt="" />
 
 				<a href="/#/resources/{resource.id}">
@@ -35,7 +35,7 @@
 	import Add from './Add.svelte';
 
 	import { me, resources, reloadResources } from '../../stores.js';
-	import { getAvatar } from '../../utils.js';
+	import { getAvatar, getColor } from '../../utils.js';
 
 	function handleAdd() {
 		reloadResources();

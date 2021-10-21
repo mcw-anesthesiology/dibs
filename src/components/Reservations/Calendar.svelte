@@ -10,16 +10,16 @@
 	import interaction, { DateClickArg } from '@fullcalendar/interaction';
 
 	import { Resource, Reservation } from '../../types.js';
-	import { address, fetchResource, transformReservation } from '../../utils.js';
+	import { address, fetchResource, transformReservation, getColor } from '../../utils.js';
 	import { userGetter, resourceGetter } from '../../stores.js';
 
-	export let resourceId: string;
+	export let resourceId: string | undefined;
 
 	let resource: Resource;
 	$: getResource(resourceId);
 
-	async function getResource(resourceId: string) {
-		resource = await fetchResource(resourceId);
+	async function getResource(resourceId: string | undefined) {
+		resource = resourceId ? await fetchResource(resourceId) : undefined;
 	}
 
 	let calendarRef: FullCalendar;
@@ -51,11 +51,21 @@
 	let eventDataTransform: (_: any) => EventInput;
 	$: eventDataTransform = obj => {
 		const reservation = transformReservation(obj);
-		return {
+
+		const eventData: EventInput = {
 			title: getTitle(reservation),
 			start: reservation.reservation_start,
 			end: reservation.reservation_end,
 		};
+
+		if (!resource) {
+			const resource = $resourceGetter(reservation.resource_id);
+			if (resource) {
+				eventData.color = getColor(resource);
+			}
+		}
+
+		return eventData;
 	};
 
 	let dateClick: (_: DateClickArg) => void;
@@ -89,6 +99,7 @@
 		slotDuration: '00:15:00',
 		slotLabelInterval: '01:00',
 		scrollTime: '08:00:00',
+		eventColor: resource ? getColor(resource) : undefined,
 		headerToolbar: {
 			center: 'dayGridMonth,timeGridWeek,dayGridWeek',
 		},

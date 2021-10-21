@@ -13,6 +13,11 @@
 		<textarea bind:value={description} disabled={loading}></textarea>
 	</label>
 
+	<label>
+		Color
+		<input type="color" bind:value={color} disabled={loading} />
+	</label>
+
 	<div class="button-container">
 		<button type="submit" disabled={loading || !isValid}>
 			Submit
@@ -43,6 +48,7 @@
 	export let name = '';
 	export let description = '';
 	export let image = '';
+	export let color = '';
 
 	let loading = false;
 	let error: Error;
@@ -70,6 +76,7 @@
 				name,
 				description,
 				image,
+				color,
 			})
 		});
 	}
@@ -82,6 +89,7 @@
 				name,
 				description,
 				image,
+				color,
 			})
 		});
 	}

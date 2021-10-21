@@ -1,4 +1,5 @@
 import { generateFromString } from 'generate-avatar';
+import stc from 'string-to-color';
 
 import type {
 	User,
@@ -172,4 +173,8 @@ export function getAvatar(resource: Resource): string {
 
 	const uid = `${resource.id}-${resource.name}`;
 	return `data:image/svg+xml;utf8,${generateFromString(uid)}`;
+}
+
+export function getColor(resource: Resource): string {
+	return resource.color ?? stc(resource.name);
 }

@@ -1,4 +1,8 @@
 <li class:showResource class:showCancel>
+	{#if resource}
+		<span class="resource-color" style="background-color: {getColor(resource)}"></span>
+	{/if}
+
 	{#if showResource}
 		<span class="resource">
 			{resource?.name ?? ''}
@@ -37,7 +41,7 @@
 
 	import { User, Resource, Reservation } from '../../types.js';
 	import { me, resourceGetter, userGetter } from '../../stores.js';
-	import { address, fetchConfig } from '../../utils.js';
+	import { address, fetchConfig, getColor } from '../../utils.js';
 
 	export let reservation: Reservation;
 	export let showResource = false;
@@ -76,6 +80,7 @@
 
 <style>
 	li {
+		position: relative;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
@@ -85,6 +90,14 @@
 
 	li:hover {
 		background-color: rgba(0, 0, 0, 0.025);
+	}
+
+	.resource-color {
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: 5px;
 	}
 
 	.resource {

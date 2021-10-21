@@ -14,6 +14,7 @@ class ResourcesController extends BaseController {
 		'name',
 		'description',
 		'image',
+		'color',
 	];
 	const REQUIRED = [
 		'name'

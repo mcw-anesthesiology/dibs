@@ -14,8 +14,6 @@ require_once('Controllers/ReservationsController.php');
 require_once('Controllers/ReserversController.php');
 require_once('Controllers/ResourcesController.php');
 
-use WP_Error;
-
 class Dibs {
 	const API_NAMESPACE = 'dibs/v1';
 	const DB_NAMESPACE = 'dibs';
@@ -166,6 +164,7 @@ class Dibs {
 			name varchar(255) not null,
 			description text,
 			image text,
+			color varchar(255),
 			updated_at datetime default current_timestamp on update current_timestamp,
 			archived_at datetime
 		) {$charsetCollate}";
