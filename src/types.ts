@@ -38,5 +38,6 @@ export interface Reservation {
 export enum RecurrenceType {
 	Weekly = 'WEEKLY',
 	MonthlyDate = 'MONTHLY_DATE',
-	MonthlyWeekDay = 'MONTHLY_WEEK_DAY',
+	MonthlyWeekDayStart = 'MONTHLY_WEEK_DAY_START',
+	MonthlyWeekDayEnd = 'MONTHLY_WEEK_DAY_END',
 }

@@ -20,18 +20,26 @@
 		</label>
 		<label>
 			<input type="radio" bind:group={recurrenceType} value={RecurrenceType.MonthlyDate} />
-			Monthly
+			Monthly by date
 		</label>
 		<label>
-			<input type="radio" bind:group={recurrenceType} value={RecurrenceType.MonthlyWeekDay} />
-			Custom
+			<input type="radio" bind:group={recurrenceType} value={RecurrenceType.MonthlyWeekDayStart} />
+			Monthly by day in week from beginning of month
+		</label>
+		<label>
+			<input type="radio" bind:group={recurrenceType} value={RecurrenceType.MonthlyWeekDayEnd} />
+			Monthly by day in week from end of month
 		</label>
 	</fieldset>
 
-	<label>
-		Until
-		<Flatpickr {options} bind:value={recurringUntil} />
-	</label>
+	<div>
+		<DateTimeInput minDate={today} />
+
+		<label>
+			Until
+			<Flatpickr {options} bind:value={until} />
+		</label>
+	</div>
 
 	<label class="note">
 		Note
@@ -51,9 +59,10 @@
 
 <script type="typescript">
 	import { onMount, createEventDispatcher } from 'svelte';
-
 	import Flatpickr from 'svelte-flatpickr';
 	import 'flatpickr/dist/flatpickr.css';
+
+	import DateTimeInput from '../DateTimeInput.svelte';
 
 	import { RecurrenceType, Reservation } from '../../types.js';
 	import { resources } from '../../stores.js';
@@ -72,7 +81,14 @@
 
 	const today = new Date();
 	let reservations: Reservation[] = [];
-	$: reload(recurringUntil);
+
+	let recurrenceType: RecurrenceType = RecurrenceType.MonthlyDate;
+	let firstStart: Date;
+	let firstEnd: Date;
+	let until: Date;
+	let description = '';
+
+	$: reload(until);
 
 	async function reload(until: Date) {
 		if (!until) {
@@ -93,15 +109,11 @@
 		loadingReservations = false;
 	}
 
-
-	let recurrenceType: RecurrenceType = RecurrenceType.MonthlyDate;
-	let recurringUntil: Date;
-	let description = '';
-
 	let loading = false;
 	let loadingReservations = false;
 	let isValid = false;
-	$: isValid = !loading && !loadingReservations && recurrenceType && recurringUntil && recurringUntil > today;
+
+	$: isValid = !loading && !loadingReservations && recurrenceType && firstStart && firstEnd && until && until > firstEnd && firstEnd >= today;
 
 	const options = {
 		minDate: today
