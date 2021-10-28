@@ -1,5 +1,6 @@
 import { generateFromString } from 'generate-avatar';
 import stc from 'string-to-color';
+import download from 'downloadjs';
 
 import type {
 	User,
@@ -8,6 +9,12 @@ import type {
 	Reservation,
 	DateString,
 } from './types.js';
+
+export async function sleep(ms: number) {
+	return new Promise(resolve => {
+		setTimeout(resolve, ms);
+	});
+}
 
 function getRestNonce() {
 	const meta = document.querySelector(
@@ -177,4 +184,71 @@ export function getAvatar(resource: Resource): string {
 
 export function getColor(resource: Resource): string {
 	return resource.color ?? stc(resource.name);
+}
+
+const PRINTER_ENDPOINT = 'https://printer.mcw-anesth.tech';
+
+export async function printElement(
+	target: Element,
+	filename = 'download.pdf',
+	options = {}
+) {
+	// Set value attributes for input elements
+	const inputElements = Array.from(
+		target.querySelectorAll(
+			'input:not([type="checkbox"]):not([type="radio"]), textarea'
+		)
+	) as HTMLInputElement[];
+	for (const el of inputElements) {
+		el.setAttribute('value', el.value);
+	}
+
+	const checkableElements = Array.from(
+		target.querySelectorAll('input[type="checkbox"], input[type="radio"]')
+	) as HTMLInputElement[];
+	for (const el of checkableElements) {
+		if (el.checked) {
+			el.setAttribute('checked', 'checked');
+		} else {
+			el.removeAttribute('checked');
+		}
+	}
+
+	const body = `<html id="printer"><body><main>${target.outerHTML}</main></body></html>`;
+
+	const styles = Array.from(document.styleSheets).map(styleSheet => {
+		if (styleSheet.href) {
+			return { url: styleSheet.href };
+		}
+
+		try {
+			return {
+				content: Array.from(styleSheet.cssRules)
+					.map(rule => rule.cssText)
+					.join(' '),
+			};
+		} catch (err) {
+			console.error(err);
+		}
+	});
+
+	styles.push({
+		content: `html#printer, html#printer body, html#printer main { margin: 0; padding: 0; width: unset; height: unset; min-width: unset; min-height: unset; }`,
+	});
+	styles.push({ content: `html#printer main { padding: 0 1em; }` });
+
+	const response = await fetch(PRINTER_ENDPOINT, {
+		method: 'POST',
+		body: JSON.stringify({
+			body,
+			styles,
+			options,
+		}),
+	});
+
+	if (!response.ok) {
+		throw new Error(response.status.toString());
+	}
+
+	download(await response.blob(), filename, 'application/pdf');
 }

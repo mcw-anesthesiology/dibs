@@ -1,8 +1,15 @@
-<section>
+<section bind:this={container} class="dibs-calendar" class:printing>
 	<FullCalendar bind:this={calendarRef} {options} />
 </section>
 
+<div class="button-container">
+	<button type="button" class="dibs-outline-button" on:click={handlePrint} disabled={printing} class:printing>
+		Download current calendar view as PDF
+	</button>
+</div>
+
 <script type="typescript">
+	import { tick } from 'svelte';
 	import { router } from 'tinro';
 	import FullCalendar, { EventInput, CalendarOptions } from 'svelte-fullcalendar';
 	import daygrid from '@fullcalendar/daygrid';
@@ -10,10 +17,13 @@
 	import interaction, { DateClickArg } from '@fullcalendar/interaction';
 
 	import { Resource, Reservation } from '../../types.js';
-	import { address, fetchResource, transformReservation, getColor } from '../../utils.js';
+	import { address, fetchResource, transformReservation, getColor, sleep } from '../../utils.js';
 	import { userGetter, resourceGetter } from '../../stores.js';
+	import { printElement } from '../../utils.js';
 
 	export let resourceId: string | undefined;
+
+	let container: HTMLElement;
 
 	let resource: Resource;
 	$: getResource(resourceId);
@@ -116,5 +126,78 @@
 		},
 		eventDataTransform,
 		dateClick,
+		displayEventEnd: true,
+		eventDisplay: 'block',
 	};
+
+	let printing = false;
+
+	async function handlePrint() {
+		printing = true;
+
+		try {
+			await tick();
+			const calendar = calendarRef.getAPI();
+			calendar.updateSize();
+			calendar.render();
+			await sleep(500);
+			await tick();
+			await printElement(container, 'calendar.pdf', {
+				landscape: true,
+				scale: 0.85,
+				printBackground: true,
+			});
+
+		} catch (err) {
+			console.error(err);
+		} finally {
+			printing = false;
+			await tick();
+			await sleep(500);
+			const calendar = calendarRef?.getAPI();
+			calendar?.updateSize();
+			calendar?.render();
+		}
+	}
 </script>
+
+<style>
+	section.printing {
+		width: 1000px;
+	}
+
+	.button-container {
+		margin: 1em;
+		text-align: center;
+	}
+
+	button {
+		opacity: 0.75;
+	}
+
+	button:hover {
+		opacity: 1;
+	}
+
+	button.printing {
+		cursor: wait;
+	}
+
+	section :global(.fc-daygrid-event) {
+		white-space: normal;
+	}
+
+	section :global(.fc-h-event .fc-event-main-frame) {
+		flex-wrap: wrap;
+	}
+
+	@media print {
+		section {
+			max-width: 100%;
+		}
+
+		section :global(.fc-button) {
+			display: none;
+		}
+	}
+</style>
