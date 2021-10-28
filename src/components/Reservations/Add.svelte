@@ -77,9 +77,7 @@
 	const dispatch = createEventDispatcher();
 
 	onMount(() => {
-		if (form) {
-			form.scrollIntoView();
-		}
+		form?.scrollIntoView();
 	});
 
 	let loading = false;

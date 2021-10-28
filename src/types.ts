@@ -34,3 +34,9 @@ export interface Reservation {
 	updated_at: Date;
 	deleted_at: Date | null;
 }
+
+export enum RecurrenceType {
+	Weekly = 'WEEKLY',
+	MonthlyDate = 'MONTHLY_DATE',
+	MonthlyWeekDay = 'MONTHLY_WEEK_DAY',
+}

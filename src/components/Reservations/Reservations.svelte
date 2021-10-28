@@ -26,9 +26,15 @@
 				<a class="dibs-outline-button" href="/#{$router.path}/reserve{$router.hash ? `#${$router.hash}` : ''}">
 					Add ➕
 				</a>
+				<a class="dibs-outline-button" href="/#{$router.path}/recurring{$router.hash ? `#${$router.hash}` : ''}">
+					Add recurring ➰
+				</a>
 			</Route>
 			<Route path="/reserve" let:meta>
 				<Add {resourceId} start={meta.query?.start ? new Date(decodeURIComponent(meta.query.start)) : undefined} end={meta.query?.end ? new Date(decodeURIComponent(meta.query.end)) : undefined} on:submit={handleAdd} on:close={handleBack} />
+			</Route>
+			<Route path="/recurring">
+				<AddRecurring {resourceId} on:submit={handleAdd} on:close={handleBack} />
 			</Route>
 		</div>
 	{/if}
@@ -40,6 +46,7 @@
 	import List from './List.svelte';
 	import Calendar from './Calendar.svelte';
 	import Add from './Add.svelte';
+	import AddRecurring from './AddRecurring.svelte';
 
 	export let resourceId: string = undefined;
 	export let canReserve = false;
@@ -48,7 +55,7 @@
 	let calendar: Calendar;
 
 	function handleBack() {
-		router.goto($router.url.replace('/reserve', ''));
+		router.goto($router.url.replace('/reserve', '').replace('/recurring', ''));
 		router.location.query.clear();
 	}
 
@@ -61,9 +68,13 @@
 <style>
 	div {
 		display: flex;
-		flex-direction: column;
+		flex-wrap: wrap;
 		justify-content: center;
-		align-items: center;
+		margin-top: 2em;
+	}
+
+	.dibs-outline-button {
+		margin: 0.5em;
 	}
 
 	nav ul {
@@ -81,9 +92,5 @@
 	nav a.active {
 		pointer-events: none;
 		opacity: 0.5;
-	}
-
-	.reserve-container {
-		margin-top: 2em;
 	}
 </style>
