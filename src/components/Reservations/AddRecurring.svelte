@@ -24,7 +24,7 @@
 		</fieldset>
 
 		<fieldset class="dates-container">
-			<DateTimeInput label="First event" bind:start={firstStart} bind:end={firstEnd} minDate={today} />
+			<DateTimeInput label="First reservation" bind:start={firstStart} bind:end={firstEnd} minDate={today} />
 
 			<label>
 				Recurring until
@@ -40,7 +40,7 @@
 
 	{#if recurrences?.length > 0}
 		<aside>
-			<p>Events to add:</p>
+			<p>Reservations to add:</p>
 			<ol>
 				{#each recurrences as block}
 					<RecurrenceListItem {block} reservations={getReservations(block, reservations)} on:reload={handleReload} />
