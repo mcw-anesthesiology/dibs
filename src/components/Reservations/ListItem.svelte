@@ -27,8 +27,13 @@
 	{#if showCancel}
 		<div class="button-container">
 			<button type="button" on:click={handleCancel}>
-				Cancel
+				Cancel reservation
 			</button>
+			{#if reservation.recurrence_id}
+				<button type="button" on:click={handleCancelSeries}>
+					Cancel reservation and subsequent in series
+				</button>
+			{/if}
 		</div>
 	{/if}
 </li>
@@ -42,6 +47,7 @@
 	import { User, Resource, Reservation } from '../../types.js';
 	import { me, resourceGetter, userGetter } from '../../stores.js';
 	import { address, fetchConfig, getColor } from '../../utils.js';
+	import { formatDateTime } from '../../formatters.js';
 
 	export let reservation: Reservation;
 	export let showResource = false;
@@ -59,7 +65,7 @@
 	$: showCancel = ($me?.admin || $me?.id == reservation.user_id) && reservation.reservation_start > now;
 
 	async function handleCancel() {
-		if (!confirm(`Cancel the reservation for ${resource?.name} for ${reservation.reservation_start} – ${reservation.reservation_end}?`)) {
+		if (!confirm(`Cancel the reservation for ${resource?.name} for ${formatDateTime(reservation.reservation_start)} – ${formatDateTime(reservation.reservation_end)}?`)) {
 			return;
 		}
 
@@ -73,6 +79,24 @@
 			console.error(err);
 			// TODO: Better alert
 			alert('There was a problem cancelling the reservation.');
+		}
+	}
+
+	async function handleCancelSeries() {
+		if (!confirm(`Cancel the reservation for ${resource?.name} for ${formatDateTime(reservation.reservation_start)} – ${formatDateTime(reservation.reservation_end)}, and all subsequent reservations in the recurring reservation series?`)) {
+			return;
+		}
+
+		try {
+			await fetch(address(`reservations/recurring/${reservation.id}`), {
+				...fetchConfig(),
+				method: 'DELETE'
+			});
+			dispatch('reload');
+		} catch (err) {
+			console.error(err);
+			// TODO: Better alert
+			alert('There was a problem cancelling the reservations.');
 		}
 	}
 </script>

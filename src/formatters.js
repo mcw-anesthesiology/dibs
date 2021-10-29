@@ -40,6 +40,10 @@ export function useFormatter(formatter, x) {
 	}
 }
 
+export function formatDateTime(d) {
+	return useFormatter(dateTimeFormatter, d);
+}
+
 export function formatDate(d) {
 	return useFormatter(dateFormatter, d);
 }

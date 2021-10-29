@@ -120,6 +120,12 @@ class ReservationsController extends BaseController {
 		if (empty($resourceId) || empty($recurrences))
 			return new WP_Error('missing_params', 'Missing required parameters', ['status' => 400]);
 
+		$wpdb->insert(Dibs::getTableName('recurrences'), [
+			'user_id' => $user->ID,
+			'resource_id' => $resourceId,
+		]);
+		$recurrenceId = $wpdb->insert_id;
+
 		$table = Dibs::getTableName(static::TABLE);
 		$added = [];
 		$notAdded = [];
@@ -133,6 +139,7 @@ class ReservationsController extends BaseController {
 				$wpdb->insert($table, [
 					'user_id' => $user->ID,
 					'resource_id' => $resourceId,
+					'recurrence_id' => $recurrenceId,
 					'reservation_start' => $recurrence['start'],
 					'reservation_end' => $recurrence['end'],
 					'description' => $description,
@@ -149,5 +156,36 @@ class ReservationsController extends BaseController {
 			'added' => $added,
 			'notAdded' => $notAdded
 		];
+	}
+
+	public static function handleDeleteRecurring($request) {
+		global $wpdb;
+
+		$id = $request->get_param('id');
+
+		if (empty($request->get_param('id')))
+			return new WP_Error('missing_params', 'Missing required parameters', ['status' => 400]);
+
+		$reservations = Dibs::getTableName(static::TABLE);
+		$user = wp_get_current_user();
+
+		$reservation = $wpdb->get_row($wpdb->prepare("select * from {$reservations} where id = %d", [$id]));
+
+		if (empty($reservation) || empty($reservation->recurrence_id))
+			return new WP_Error('not-found', 'Not found', ['status' => 404]);
+
+		$isAdmin = $user->has_cap(Dibs::ADMIN_CAP);
+
+		if (!$isAdmin && $reservation->user_id != $user->ID)
+			return new WP_Error('not-allowed', 'Not allowed', ['status' => 403]);
+
+		$query = "update {$reservations} set deleted_at = %s where deleted_at is null and recurrence_id = %d and reservation_start >= %s";
+		$params = [date('c'), $reservation->recurrence_id, $reservation->reservation_start];
+		if (!$isAdmin) {
+			$query .= " and user_id = %d";
+			$params[] = $user->ID;
+		}
+
+		$wpdb->query($wpdb->prepare($query, $params));
 	}
 }

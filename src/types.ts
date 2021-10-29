@@ -27,6 +27,7 @@ export interface Reservation {
 	id: string;
 	user_id: string;
 	resource_id: string;
+	recurrence_id: string | null;
 	reservation_start: Date;
 	reservation_end: Date;
 	description: string | null;

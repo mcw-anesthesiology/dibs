@@ -101,13 +101,17 @@ class Dibs {
 			}
 		]);
 
+		self::registerController('/resources', Controllers\ResourcesController::class);
+		self::registerController('/reservers', Controllers\ReserversController::class);
 		self::registerController('/reservations', Controllers\ReservationsController::class);
 		register_rest_route(self::API_NAMESPACE, '/reservations/recurring', [
 			'methods' => ['POST'],
 			'callback' => [Controllers\ReservationsController::class, 'handleRecurring']
 		]);
-		self::registerController('/reservers', Controllers\ReserversController::class);
-		self::registerController('/resources', Controllers\ResourcesController::class);
+		register_rest_route(self::API_NAMESPACE, '/reservations/recurring/(?P<id>[\d]+)', [
+			'methods' => ['DELETE'],
+			'callback' => [Controllers\ReservationsController::class, 'handleDeleteRecurring']
+		]);
 	}
 
 	static function transformUser($user) {
@@ -158,6 +162,7 @@ class Dibs {
 		$resources = self::getTableName('resources');
 		$reservers = self::getTableName('reservers');
 		$reservations = self::getTableName('reservations');
+		$recurrences = self::getTableName('recurrences');
 
 
 		$charsetCollate = $wpdb->get_charset_collate();
@@ -184,10 +189,22 @@ class Dibs {
 
 		dbDelta($sql);
 
-		$sql = "CREATE TABLE IF NOT EXISTS {$reservations} (
-			id bigint not null auto_increment primary key,
+		$sql = "CREATE TABLE IF NOT EXISTS {$recurrences} (
+			id bigint unsigned not null auto_increment primary key,
 			user_id bigint unsigned not null,
 			resource_id bigint unsigned not null,
+			created_at datetime default current_timestamp,
+			foreign key (user_id) references {$users} (ID),
+			foreign key (resource_id) references {$resources} (id)
+		) {$charsetCollate}";
+
+		dbDelta($sql);
+
+		$sql = "CREATE TABLE IF NOT EXISTS {$reservations} (
+			id bigint unsigned not null auto_increment primary key,
+			user_id bigint unsigned not null,
+			resource_id bigint unsigned not null,
+			recurrence_id bigint unsigned,
 			reservation_start datetime not null,
 			reservation_end datetime not null,
 			description text,
@@ -195,7 +212,8 @@ class Dibs {
 			updated_at datetime default current_timestamp on update current_timestamp,
 			deleted_at datetime,
 			foreign key (user_id) references {$users} (ID),
-			foreign key (resource_id) references {$resources} (id)
+			foreign key (resource_id) references {$resources} (id),
+			foreign key (recurrence_id) references {$recurrences} (id)
 		) {$charsetCollate}";
 
 		dbDelta($sql);
