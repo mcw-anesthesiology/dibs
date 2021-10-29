@@ -1,48 +1,54 @@
 <form bind:this={form} on:submit={handleSubmit} class:loading>
-	{#if showResourceSelector}
-		<label class="resource">
-			Resource
-			<select bind:value={resourceId} required disabled={loading}>
-				<option disabled></option>
-				{#each $resources as resource}
-					<option value={resource.id}>{resource.name}</option>
-				{/each}
-			</select>
-		</label>
-	{/if}
-
-	<fieldset>
-		<legend>Recurrence type</legend>
-
-		{#each Object.values(RecurrenceType) as rType}
-			<label>
-				<input type="radio" bind:group={recurrenceType} value={rType} />
-				{renderRecurrenceType(rType)}
+	<div class="controls">
+		{#if showResourceSelector}
+			<label class="resource">
+				Resource
+				<select bind:value={resourceId} required disabled={loading}>
+					<option disabled></option>
+					{#each $resources as resource}
+						<option value={resource.id}>{resource.name}</option>
+					{/each}
+				</select>
 			</label>
-		{/each}
-	</fieldset>
+		{/if}
 
-	<div>
-		<DateTimeInput label="Starting" bind:start={firstStart} bind:end={firstEnd} minDate={today} />
+		<fieldset>
+			<legend>Recurrence type</legend>
 
-		<label>
-			Until
-			<Flatpickr {options} bind:value={until} disabled={!firstEnd} />
+			{#each Object.values(RecurrenceType) as rType}
+				<label>
+					<input type="radio" bind:group={recurrenceType} value={rType} />
+					{renderRecurrenceType(rType)}
+				</label>
+			{/each}
+		</fieldset>
+
+		<fieldset class="dates-container">
+			<DateTimeInput label="First event" bind:start={firstStart} bind:end={firstEnd} minDate={today} />
+
+			<label>
+				Recurring until
+				<Flatpickr {options} bind:value={until} disabled={!firstEnd} />
+			</label>
+		</fieldset>
+
+		<label class="note">
+			Note
+			<textarea bind:value={description} disabled={loading}></textarea>
 		</label>
 	</div>
 
-	<aside>
-		<ol>
-			{#each recurrences as block}
-				<RecurrenceListItem {block} reservations={getReservations(block, reservations)} on:reload={handleReload} />
-			{/each}
-		</ol>
-	</aside>
+	{#if recurrences?.length > 0}
+		<aside>
+			<p>Events to add:</p>
+			<ol>
+				{#each recurrences as block}
+					<RecurrenceListItem {block} reservations={getReservations(block, reservations)} on:reload={handleReload} />
+				{/each}
+			</ol>
+		</aside>
+	{/if}
 
-	<label class="note">
-		Note
-		<textarea bind:value={description} disabled={loading}></textarea>
-	</label>
 
 	{#if error}
 		<div class="error-container">
@@ -54,10 +60,11 @@
 	{/if}
 
 	{#if response}
-		<div>
-
+		<div class="response-container">
 			{#if response.added?.length > 0}
-				<p>Successfully added {response.added.length} reservations.</p>
+				<p>
+					Successfully added {response.added.length} reservations.
+				</p>
 			{/if}
 
 			{#if response.notAdded?.length > 0}
@@ -219,16 +226,62 @@
 
 <style>
 	form {
+		flex-grow: 1;
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
+		align-items: center;
+		border: 1px solid var(--border-color);
+		padding: 2em 1em;
+		margin: 1em auto;
 	}
 
 	form.loading {
 		cursor: wait;
 	}
 
+	.controls {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		align-items: flex-start;
+	}
+
+	.controls > * {
+		margin: 0.5em;
+	}
+
 	fieldset {
 		display: flex;
 		flex-direction: column;
+	}
+
+	aside {
+		margin: 1em 0;
+	}
+
+	form .button-container {
+		margin-top: 2em;
+	}
+
+	.dates-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		border: none;
+	}
+
+	.dates-container > label {
+		margin-top: 1em;
+	}
+
+	.dates-container > label :global(.flatpickr-input) {
+		width: 12em;
+	}
+
+	.response-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 </style>
