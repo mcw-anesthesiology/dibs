@@ -103,4 +103,51 @@ class ReservationsController extends BaseController {
 			return new WP_Error('unauthorized', 'Unauthorized', 403);
 		}
 	}
+
+	public static function handleRecurring($request) {
+		global $wpdb;
+
+		$resourceId = $request->get_param('resource_id');
+		$description = $request->get_param('description');
+		if (empty($description)) {
+			$description = null;
+		}
+
+		$user = wp_get_current_user();
+
+		$recurrences = $request->get_param('recurrences');
+
+		if (empty($resourceId) || empty($recurrences))
+			return new WP_Error('missing_params', 'Missing required parameters', ['status' => 400]);
+
+		$table = Dibs::getTableName(static::TABLE);
+		$added = [];
+		$notAdded = [];
+
+		foreach ($recurrences as $recurrence) {
+			try {
+				if (self::alreadyBooked($resourceId, $recurrence['start'], $recurrence['end'])) {
+					throw new \Exception('Already booked');
+				}
+
+				$wpdb->insert($table, [
+					'user_id' => $user->ID,
+					'resource_id' => $resourceId,
+					'reservation_start' => $recurrence['start'],
+					'reservation_end' => $recurrence['end'],
+					'description' => $description,
+				]);
+
+				$added[] = $recurrence;
+			} catch (\Exception $e) {
+				error_log((string)$e);
+				$notAdded = $recurrence;
+			}
+		}
+
+		return [
+			'added' => $added,
+			'notAdded' => $notAdded
+		];
+	}
 }

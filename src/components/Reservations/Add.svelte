@@ -35,7 +35,9 @@
 	{#if error}
 		<aside class="error-container">
 			<button type="button" class="dismiss" aria-label="Dismiss" on:click={() => { error = null; }}>×</button>
-			Sorry, there was a problem adding your reservation.
+			<p>
+				Sorry, there was a problem adding your reservation.
+			</p>
 		</aside>
 	{/if}
 

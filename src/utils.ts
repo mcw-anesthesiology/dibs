@@ -2,7 +2,13 @@ import { generateFromString } from 'generate-avatar';
 import stc from 'string-to-color';
 import download from 'downloadjs';
 
-import type { User, Resource, Reserver, Reservation } from './types.js';
+import {
+	User,
+	Resource,
+	Reserver,
+	Reservation,
+	RecurrenceType,
+} from './types.js';
 import { parseDate, dateString } from './date-utils.js';
 
 export * from './date-utils.js';
@@ -24,6 +30,10 @@ function getRestNonce() {
 }
 
 export function address(path: string): string {
+	if (path.startsWith('/')) {
+		path = path.substring(1);
+	}
+
 	return `${import.meta.env.VITE_BASE_URL}${
 		import.meta.env.VITE_API_PATH
 	}/${path}`;
@@ -146,6 +156,23 @@ export function getAvatar(resource: Resource): string {
 
 export function getColor(resource: Resource): string {
 	return resource.color ?? stc(resource.name);
+}
+
+export function renderRecurrenceType(recurrenceType: RecurrenceType): string {
+	switch (recurrenceType) {
+		case RecurrenceType.Daily:
+			return 'Daily';
+		case RecurrenceType.Weekly:
+			return 'Weekly';
+		case RecurrenceType.MonthlyDate:
+			return 'Monthly, by date of month';
+		case RecurrenceType.MonthlyWeekDayStart:
+			return 'Monthly, by numbered weekday, from start of month';
+		case RecurrenceType.MonthlyWeekDayEnd:
+			return 'Monthly, by numbered weekday, from end of month';
+		case RecurrenceType.Yearly:
+			return 'Yearly';
+	}
 }
 
 const PRINTER_ENDPOINT = 'https://printer.mcw-anesth.tech';

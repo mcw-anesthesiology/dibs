@@ -34,7 +34,7 @@
 				<Add {resourceId} start={meta.query?.start ? new Date(decodeURIComponent(meta.query.start)) : undefined} end={meta.query?.end ? new Date(decodeURIComponent(meta.query.end)) : undefined} on:submit={handleAdd} on:close={handleBack} />
 			</Route>
 			<Route path="/recurring">
-				<AddRecurring {resourceId} on:submit={handleAdd} on:close={handleBack} />
+				<AddRecurring {resourceId} on:submit={handleReload} on:close={handleBack} on:reload={handleReload} />
 			</Route>
 		</div>
 	{/if}
@@ -60,8 +60,12 @@
 	}
 
 	function handleAdd() {
-		list?.handleReload();
+		handleReload();
 		handleBack();
+	}
+
+	function handleReload() {
+		list?.handleReload();
 	}
 </script>
 

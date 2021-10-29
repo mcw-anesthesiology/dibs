@@ -35,6 +35,11 @@ export interface Reservation {
 	deleted_at: Date | null;
 }
 
+export interface Block {
+	start: Date;
+	end: Date;
+}
+
 export enum RecurrenceType {
 	Daily = 'DAILY',
 	Weekly = 'WEEKLY',
@@ -44,19 +49,7 @@ export enum RecurrenceType {
 	Yearly = 'YEARLY',
 }
 
-export function renderRecurrenceType(recurrenceType: RecurrenceType): string {
-	switch (recurrenceType) {
-		case RecurrenceType.Daily:
-			return 'Daily';
-		case RecurrenceType.Weekly:
-			return 'Weekly';
-		case RecurrenceType.MonthlyDate:
-			return 'Monthly, by date of month';
-		case RecurrenceType.MonthlyWeekDayStart:
-			return 'Monthly, by numbered weekday, from start of month';
-		case RecurrenceType.MonthlyWeekDayEnd:
-			return 'Monthly, by numbered weekday, from end of month';
-		case RecurrenceType.Yearly:
-			return 'Yearly';
-	}
+export interface RecurrenceResponse {
+	added: Block[];
+	notAdded: Block[];
 }

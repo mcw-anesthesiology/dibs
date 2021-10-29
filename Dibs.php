@@ -14,6 +14,8 @@ require_once('Controllers/ReservationsController.php');
 require_once('Controllers/ReserversController.php');
 require_once('Controllers/ResourcesController.php');
 
+use WP_Error;
+
 class Dibs {
 	const API_NAMESPACE = 'dibs/v1';
 	const DB_NAMESPACE = 'dibs';
@@ -55,9 +57,8 @@ class Dibs {
 	public function initRestApi() {
 		remove_filter('rest_pre_serve_request', 'rest_send_cors_headers');
 
-		/*
 		add_filter('rest_pre_dispatch', function($result, $server, $request) {
-			if (self::matchesNamespace($request->get_route())) {
+			if (self::matchesNamespace($request->get_route()) && $request->get_method() != 'OPTIONS') {
 				$user = wp_get_current_user();
 				if (!$user || !$user->ID)
 					return new WP_Error('unauthorized', 'Unauthorized', ['status' => 401]);
@@ -65,7 +66,6 @@ class Dibs {
 
 			return $result;
 		}, 10, 4);
-		 */
 
 		add_filter('rest_pre_serve_request', function($served, $response, $request, $server) {
 			if (self::matchesNamespace($request->get_route())) {
@@ -102,6 +102,10 @@ class Dibs {
 		]);
 
 		self::registerController('/reservations', Controllers\ReservationsController::class);
+		register_rest_route(self::API_NAMESPACE, '/reservations/recurring', [
+			'methods' => ['POST'],
+			'callback' => [Controllers\ReservationsController::class, 'handleRecurring']
+		]);
 		self::registerController('/reservers', Controllers\ReserversController::class);
 		self::registerController('/resources', Controllers\ResourcesController::class);
 	}

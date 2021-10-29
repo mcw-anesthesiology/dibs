@@ -21,7 +21,7 @@
 		<RichDate date={reservation.reservation_end} timeOnly />
 	</LabeledValue>
 	<LabeledValue label="Note">
-		<pre>{reservation.description}</pre>
+		<pre>{reservation.description ?? ''}</pre>
 	</LabeledValue>
 
 	{#if showCancel}
@@ -64,17 +64,16 @@
 		}
 
 		try {
-			fetch(address(`reservations/${reservation.id}`), {
+			await fetch(address(`reservations/${reservation.id}`), {
 				...fetchConfig(),
 				method: 'DELETE'
 			});
+			dispatch('reload');
 		} catch (err) {
 			console.error(err);
 			// TODO: Better alert
 			alert('There was a problem cancelling the reservation.');
 		}
-
-		dispatch('reload');
 	}
 </script>
 
