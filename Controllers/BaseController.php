@@ -217,7 +217,7 @@ class BaseController {
 		$table = Dibs::getTableName(static::TABLE);
 
 		if (!empty(static::DELETED_AT_COLUMN)) {
-			$wpdb->update($table, [static::DELETED_AT_COLUMN => 'current_timestamp'], ['id' => $id]);
+			$wpdb->update($table, [static::DELETED_AT_COLUMN => date('c')], ['id' => $id]);
 		} else {
 			$wpdb->delete($table, ['id' => $id]);
 		}

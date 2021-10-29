@@ -97,7 +97,7 @@ class ReservationsController extends BaseController {
 			$params['user_id'] = $user->id;
 		}
 
-		$updated = $wpdb->update($reservations, [static::DELETED_AT_COLUMN => 'current_timestamp'], $params);
+		$updated = $wpdb->update($reservations, [static::DELETED_AT_COLUMN => date('c')], $params);
 
 		if (!$updated) {
 			return new WP_Error('unauthorized', 'Unauthorized', 403);
