@@ -2,13 +2,10 @@ import { generateFromString } from 'generate-avatar';
 import stc from 'string-to-color';
 import download from 'downloadjs';
 
-import type {
-	User,
-	Resource,
-	Reserver,
-	Reservation,
-	DateString,
-} from './types.js';
+import type { User, Resource, Reserver, Reservation } from './types.js';
+import { parseDate, dateString } from './date-utils.js';
+
+export * from './date-utils.js';
 
 export async function sleep(ms: number) {
 	return new Promise(resolve => {
@@ -138,41 +135,6 @@ function transformDates(obj: any, keys: string[]): any {
 	}
 
 	return obj;
-}
-
-// WordPress ignores timezones, assume received date is UTC
-export function parseDate(date: DateString): Date {
-	const d = new Date(date);
-	d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-	return d;
-}
-
-export function getDatePart(date: Date): Date {
-	const d = new Date(date);
-	d.setHours(0, 0, 0, 0);
-	return d;
-}
-
-export function dateString(date: Date): string {
-	const s = date.toISOString();
-	return s.substring(0, s.indexOf('T'));
-}
-
-export function dateStringLocal(date: Date): string {
-	return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-}
-
-export function dateTimeString(date: Date): string {
-	return date.toISOString();
-}
-
-export function thisMonth(): [Date, Date] {
-	const after = new Date();
-	const before = new Date();
-	after.setDate(1);
-	before.setMonth(before.getMonth() + 1, 0);
-
-	return [after, before];
 }
 
 export function getAvatar(resource: Resource): string {

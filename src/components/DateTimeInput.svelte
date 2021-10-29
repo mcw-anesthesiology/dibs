@@ -25,7 +25,7 @@
 	import Flatpickr from 'svelte-flatpickr';
 	import 'flatpickr/dist/flatpickr.css';
 
-	import { getDatePart, dateStringLocal } from '../utils.js';
+	import { getDatePart, dateStringLocal, combineDateTime } from '../date-utils.js';
 
 	export let label = 'Date';
 	export let required = false;
@@ -82,18 +82,6 @@
 		minDate: startTime
 	};
 
-	function combineDateTime(date: Date, time: Date): Date | undefined {
-		if (!date || !time) return undefined;
-
-		return new Date(
-			date.getFullYear(),
-			date.getMonth(),
-			date.getDate(),
-			time.getHours(),
-			time.getMinutes(),
-			time.getSeconds(),
-		);
-	}
 </script>
 
 <style>

@@ -14,30 +14,20 @@
 	<fieldset>
 		<legend>Recurrence type</legend>
 
-		<label>
-			<input type="radio" bind:group={recurrenceType} value={RecurrenceType.Weekly} />
-			Weekly
-		</label>
-		<label>
-			<input type="radio" bind:group={recurrenceType} value={RecurrenceType.MonthlyDate} />
-			Monthly by date
-		</label>
-		<label>
-			<input type="radio" bind:group={recurrenceType} value={RecurrenceType.MonthlyWeekDayStart} />
-			Monthly by day in week from beginning of month
-		</label>
-		<label>
-			<input type="radio" bind:group={recurrenceType} value={RecurrenceType.MonthlyWeekDayEnd} />
-			Monthly by day in week from end of month
-		</label>
+		{#each Object.values(RecurrenceType) as rType}
+			<label>
+				<input type="radio" bind:group={recurrenceType} value={rType} />
+				{renderRecurrenceType(rType)}
+			</label>
+		{/each}
 	</fieldset>
 
 	<div>
-		<DateTimeInput minDate={today} />
+		<DateTimeInput label="Starting" bind:start={firstStart} bind:end={firstEnd} minDate={today} />
 
 		<label>
 			Until
-			<Flatpickr {options} bind:value={until} />
+			<Flatpickr {options} bind:value={until} disabled={!firstEnd} />
 		</label>
 	</div>
 
@@ -60,13 +50,15 @@
 <script type="typescript">
 	import { onMount, createEventDispatcher } from 'svelte';
 	import Flatpickr from 'svelte-flatpickr';
+	import flatpickr from 'flatpickr';
 	import 'flatpickr/dist/flatpickr.css';
 
 	import DateTimeInput from '../DateTimeInput.svelte';
 
-	import { RecurrenceType, Reservation } from '../../types.js';
+	import { RecurrenceType, Reservation, renderRecurrenceType } from '../../types.js';
 	import { resources } from '../../stores.js';
-	import { address, fetchConfig, fetchReservations, dateTimeString } from '../../utils.js';
+	import { address, fetchConfig, fetchReservations } from '../../utils.js';
+	import { dateTimeString, getRecurrenceDates } from '../../date-utils.js';
 
 	export let showResourceSelector = false;
 	export let resourceId: number | string = undefined;
@@ -115,8 +107,14 @@
 
 	$: isValid = !loading && !loadingReservations && recurrenceType && firstStart && firstEnd && until && until > firstEnd && firstEnd >= today;
 
-	const options = {
-		minDate: today
+	$: if (firstStart && until) {
+		console.log(getRecurrenceDates(firstStart, until, recurrenceType));
+	}
+
+	let options: flatpickr.Options.Options;
+	$: options = {
+		minDate: firstEnd || today,
+		clickOpens: Boolean(firstEnd)
 	};
 
 	async function handleSubmit(event: Event) {
@@ -134,7 +132,17 @@
 </script>
 
 <style>
+	form {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
 	form.loading {
 		cursor: wait;
+	}
+
+	fieldset {
+		display: flex;
+		flex-direction: column;
 	}
 </style>

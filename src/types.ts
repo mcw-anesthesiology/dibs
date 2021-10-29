@@ -36,8 +36,27 @@ export interface Reservation {
 }
 
 export enum RecurrenceType {
+	Daily = 'DAILY',
 	Weekly = 'WEEKLY',
 	MonthlyDate = 'MONTHLY_DATE',
 	MonthlyWeekDayStart = 'MONTHLY_WEEK_DAY_START',
 	MonthlyWeekDayEnd = 'MONTHLY_WEEK_DAY_END',
+	Yearly = 'YEARLY',
+}
+
+export function renderRecurrenceType(recurrenceType: RecurrenceType): string {
+	switch (recurrenceType) {
+		case RecurrenceType.Daily:
+			return 'Daily';
+		case RecurrenceType.Weekly:
+			return 'Weekly';
+		case RecurrenceType.MonthlyDate:
+			return 'Monthly, by date of month';
+		case RecurrenceType.MonthlyWeekDayStart:
+			return 'Monthly, by numbered weekday, from start of month';
+		case RecurrenceType.MonthlyWeekDayEnd:
+			return 'Monthly, by numbered weekday, from end of month';
+		case RecurrenceType.Yearly:
+			return 'Yearly';
+	}
 }
