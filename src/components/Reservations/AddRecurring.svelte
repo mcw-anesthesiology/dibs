@@ -12,13 +12,29 @@
 			</label>
 		{/if}
 
-		<fieldset>
+		<fieldset class="recurrence-type">
 			<legend>Recurrence type</legend>
 
 			{#each Object.values(RecurrenceType) as rType}
 				<label>
 					<input type="radio" bind:group={recurrenceType} value={rType} />
-					{renderRecurrenceType(rType)}
+
+					{#if rType === RecurrenceType.Daily}
+						Daily
+					{:else if rType === RecurrenceType.Weekly}
+						Weekly
+					{:else if rType === RecurrenceType.MonthlyDate}
+						Monthly, by date
+						<small>(e.g. the 15th of the month)</small>
+					{:else if rType === RecurrenceType.MonthlyWeekDayStart}
+						Monthly, by week and weekday, from start
+						<small>(e.g. second Thursday of the month)</small>
+					{:else if rType === RecurrenceType.MonthlyWeekDayEnd}
+						Monthly, by week and weekday, from end
+						<small>(e.g. last Friday of the month)</small>
+					{:else if rType === RecurrenceType.Yearly}
+						Yearly
+					{/if}
 				</label>
 			{/each}
 		</fieldset>
@@ -108,7 +124,7 @@
 
 	import { RecurrenceType, RecurrenceResponse, Reservation, Block } from '../../types.js';
 	import { resources } from '../../stores.js';
-	import { address, fetchConfig, fetchReservations, renderRecurrenceType } from '../../utils.js';
+	import { address, fetchConfig, fetchReservations } from '../../utils.js';
 	import { getDatePart, combineDateTime, dateTimeString, getRecurrenceDates } from '../../date-utils.js';
 
 	export let showResourceSelector = false;
@@ -262,6 +278,12 @@
 
 	form .button-container {
 		margin-top: 2em;
+	}
+
+	.recurrence-type :global(small) {
+		display: block;
+		padding-left: 2em;
+		margin-bottom: 0.5em;
 	}
 
 	.dates-container {

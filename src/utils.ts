@@ -158,23 +158,6 @@ export function getColor(resource: Resource): string {
 	return resource.color ?? stc(resource.name);
 }
 
-export function renderRecurrenceType(recurrenceType: RecurrenceType): string {
-	switch (recurrenceType) {
-		case RecurrenceType.Daily:
-			return 'Daily';
-		case RecurrenceType.Weekly:
-			return 'Weekly';
-		case RecurrenceType.MonthlyDate:
-			return 'Monthly, by date of month';
-		case RecurrenceType.MonthlyWeekDayStart:
-			return 'Monthly, by numbered weekday, from start of month';
-		case RecurrenceType.MonthlyWeekDayEnd:
-			return 'Monthly, by numbered weekday, from end of month';
-		case RecurrenceType.Yearly:
-			return 'Yearly';
-	}
-}
-
 const PRINTER_ENDPOINT = 'https://printer.mcw-anesth.tech';
 
 export async function printElement(
