@@ -12,7 +12,7 @@
 
 .dibs-reservations
 	label
-	:is(input:not([type='checkbox']):not([type='radio']), textarea, select) {
+	:is(input[type='text'], input[type='number'], input[type='email'], input[type='date'], textarea, select) {
 	display: block;
 	box-sizing: border-box;
 	width: 100%;
