@@ -103,6 +103,7 @@
 
 	let options: CalendarOptions;
 	$: options = {
+		height: printing ? 'auto' : undefined,
 		initialView: 'timeGridWeek',
 		plugins: [daygrid, timegrid, interaction],
 		allDaySlot: false,
