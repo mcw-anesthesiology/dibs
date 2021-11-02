@@ -58,7 +58,7 @@
 		<p>
 			Use
 			<a href="https://wordpress.org/plugins/user-role-editor/">
-				Use Role Editor
+				User Role Editor
 			</a>
 			to
 			<a href="/wp-admin/users.php" tinro-ignore>
