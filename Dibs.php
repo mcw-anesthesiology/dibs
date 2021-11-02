@@ -58,7 +58,7 @@ class Dibs {
 		remove_filter('rest_pre_serve_request', 'rest_send_cors_headers');
 
 		add_filter('rest_pre_dispatch', function($result, $server, $request) {
-			if (self::matchesNamespace($request->get_route()) && $request->get_method() != 'OPTIONS') {
+			if (self::matchesNamespace($request->get_route()) && !in_array($request->get_method(), ['OPTIONS', 'GET'])) {
 				$user = wp_get_current_user();
 				if (!$user || !$user->ID)
 					return new WP_Error('unauthorized', 'Unauthorized', ['status' => 401]);
