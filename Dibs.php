@@ -172,7 +172,7 @@ class Dibs {
 			id bigint unsigned not null auto_increment primary key,
 			name varchar(255) not null,
 			description text,
-			image text,
+			image longblob,
 			color varchar(255),
 			updated_at datetime default current_timestamp on update current_timestamp,
 			archived_at datetime
