@@ -107,6 +107,8 @@
 		initialView: 'timeGridWeek',
 		plugins: [daygrid, timegrid, interaction],
 		allDaySlot: false,
+		slotMinTime: printing ? '06:00:00' : '00:00:00',
+		slotMaxTime: printing ? '18:00:00' : '24:00:00',
 		slotDuration: '00:15:00',
 		slotLabelInterval: '01:00',
 		scrollTime: '08:00:00',
@@ -141,11 +143,12 @@
 			const calendar = calendarRef.getAPI();
 			calendar.updateSize();
 			calendar.render();
+			const gridView = calendar.view.type === 'timeGridWeek';
 			await sleep(500);
 			await tick();
 			await printElement(container, 'calendar.pdf', {
-				landscape: true,
-				scale: 0.85,
+				landscape: !gridView,
+				scale: gridView ? 0.7 : 0.85,
 				printBackground: true,
 			});
 

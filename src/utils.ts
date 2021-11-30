@@ -158,10 +158,7 @@ export function getColor(resource: Resource): string {
 	return resource.color ?? stc(resource.name);
 }
 
-const PRINTER_ENDPOINT =
-	import.meta.env.MODE === 'development'
-		? 'http://localhost:3001'
-		: 'https://printer.mcw-anesth.tech';
+const PRINTER_ENDPOINT = 'https://printer.mcw-anesth.tech';
 
 export async function printElement(
 	target: Element,
