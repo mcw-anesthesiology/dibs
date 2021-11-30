@@ -188,24 +188,28 @@ export async function printElement(
 
 	const body = `<html id="printer"><body><main>${target.outerHTML}</main></body></html>`;
 
-	const styles = Array.from(document.styleSheets).map(styleSheet => {
-		if (styleSheet.href) {
-			return { url: styleSheet.href };
-		}
+	const styles = Array.from(document.styleSheets)
+		.filter(
+			styleSheet => !styleSheet.href || styleSheet.href.includes('dibs')
+		)
+		.map(styleSheet => {
+			if (styleSheet.href) {
+				return { url: styleSheet.href };
+			}
 
-		try {
-			return {
-				content: Array.from(styleSheet.cssRules)
-					.map(rule => rule.cssText)
-					.join(' '),
-			};
-		} catch (err) {
-			console.error(err);
-		}
-	});
+			try {
+				return {
+					content: Array.from(styleSheet.cssRules)
+						.map(rule => rule.cssText)
+						.join(' '),
+				};
+			} catch (err) {
+				console.error(err);
+			}
+		});
 
 	styles.push({
-		content: `html#printer, html#printer body, html#printer main { margin: 0; padding: 0; width: unset; height: unset; min-width: unset; min-height: unset; }`,
+		content: `html#printer, html#printer body, html#printer main { margin: 0 !important; padding: 0 !important; width: unset !important; height: unset !important; min-width: unset !important; min-height: unset !important; }`,
 	});
 	styles.push({ content: `html#printer main { padding: 0 1em; }` });
 
