@@ -201,6 +201,11 @@
 			max-width: 100%;
 		}
 
+		section :global(.fc h2.fc-toolbar-title) {
+			font-size: 1.75em;
+			margin: 0 !important;
+		}
+
 		section :global(.fc-button) {
 			display: none;
 		}
