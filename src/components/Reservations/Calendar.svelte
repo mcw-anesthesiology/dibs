@@ -151,6 +151,8 @@
 				}
 			}
 
+			container.scrollIntoView();
+
 			await sleep(500);
 			await tick();
 			await sleep(500);
@@ -165,6 +167,8 @@
 					styleSheet.disabled = false;
 				}
 			}
+
+			container.scrollIntoView();
 
 		} catch (err) {
 			console.error(err);
