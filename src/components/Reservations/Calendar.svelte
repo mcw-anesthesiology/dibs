@@ -146,6 +146,7 @@
 			const gridView = calendar.view.type === 'timeGridWeek';
 			await sleep(500);
 			await tick();
+			await sleep(500);
 			await printElement(container, 'calendar.pdf', {
 				landscape: !gridView,
 				scale: gridView ? 0.7 : 0.85,
