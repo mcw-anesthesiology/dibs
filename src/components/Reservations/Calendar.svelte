@@ -162,7 +162,7 @@
 
 			for (const styleSheet of document.styleSheets) {
 				if (styleSheet.href && !styleSheet.href.includes('dibs')) {
-					styleSheet.disabled = true;
+					styleSheet.disabled = false;
 				}
 			}
 
