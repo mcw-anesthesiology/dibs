@@ -144,6 +144,13 @@
 			calendar.updateSize();
 			calendar.render();
 			const gridView = calendar.view.type === 'timeGridWeek';
+
+			for (const styleSheet of document.styleSheets) {
+				if (styleSheet.href && !styleSheet.href.includes('dibs')) {
+					styleSheet.disabled = true;
+				}
+			}
+
 			await sleep(500);
 			await tick();
 			await sleep(500);
@@ -152,6 +159,12 @@
 				scale: gridView ? 0.7 : 0.85,
 				printBackground: true,
 			});
+
+			for (const styleSheet of document.styleSheets) {
+				if (styleSheet.href && !styleSheet.href.includes('dibs')) {
+					styleSheet.disabled = true;
+				}
+			}
 
 		} catch (err) {
 			console.error(err);

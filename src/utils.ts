@@ -189,9 +189,7 @@ export async function printElement(
 	const body = `<html id="printer"><body><main>${target.outerHTML}</main></body></html>`;
 
 	const styles = Array.from(document.styleSheets)
-		.filter(
-			styleSheet => !styleSheet.href || styleSheet.href.includes('dibs')
-		)
+		.filter(styleSheet => !styleSheet.disabled)
 		.map(styleSheet => {
 			if (styleSheet.href) {
 				return { url: styleSheet.href };
