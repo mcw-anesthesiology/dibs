@@ -6,6 +6,11 @@
 	<button type="button" class="dibs-outline-button" on:click={handlePrint} disabled={printing} class:printing>
 		Download current calendar view as PDF
 	</button>
+
+	<label>
+		<input type="checkbox" bind:checked={landscape} />
+		Print landscape
+	</label>
 </div>
 
 <script type="typescript">
@@ -101,6 +106,7 @@
 		}
 		: undefined;
 
+	let landscape = true;
 	let options: CalendarOptions;
 	$: options = {
 		height: printing ? 'auto' : undefined,
@@ -131,6 +137,9 @@
 		dateClick,
 		displayEventEnd: true,
 		eventDisplay: 'block',
+		viewDidMount({ view }) {
+			landscape = view.type !== 'timeGridWeek';
+		}
 	};
 
 	let printing = false;
@@ -143,7 +152,6 @@
 			const calendar = calendarRef.getAPI();
 			calendar.updateSize();
 			calendar.render();
-			const gridView = calendar.view.type === 'timeGridWeek';
 
 			for (const styleSheet of document.styleSheets) {
 				if (styleSheet.href && !styleSheet.href.includes('dibs')) {
@@ -157,8 +165,8 @@
 			await tick();
 			await sleep(500);
 			await printElement(container, 'calendar.pdf', {
-				landscape: !gridView,
-				scale: gridView ? 0.7 : 0.85,
+				landscape,
+				scale: landscape ? 0.85 : 0.7,
 				printBackground: true,
 			});
 
@@ -190,7 +198,9 @@
 
 	.button-container {
 		margin: 1em;
-		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	button {
