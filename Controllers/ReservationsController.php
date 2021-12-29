@@ -27,22 +27,30 @@ class ReservationsController extends BaseController {
 	const DELETED_AT_COLUMN = 'deleted_at';
 
 	public static function get($request, $whereClauses = [], $whereValues = []) {
-		$after = $request->get_param('start') ?? $request->get_param('after');
+		$after = $request->get_param('start') ?? $request->get_param('after') ?? $request->get_param('afterExclusive');
 		if (!empty($after)) {
+			$comparison = $after == $request->get_param('afterExclusive')
+				? '>'
+				: '>=';
+
 			if (strpos($after, 'T') === false) {
-				$whereClauses[] = 'date(reservation_end) >= %s';
+				$whereClauses[] = "date(reservation_end) {$comparison} %s";
 			} else {
-				$whereClauses[] = 'reservation_end >= %s';
+				$whereClauses[] = "reservation_end {$comparison} %s";
 			}
 			$whereValues[] = $after;
 		}
 
-		$before = $request->get_param('end') ?? $request->get_param('before');
+		$before = $request->get_param('end') ?? $request->get_param('before') ?? $request->getParam('beforeExclusive');
 		if (!empty($before)) {
+			$comparison = $before == $request->get_param('beforeExclusive')
+				? '<'
+				: '<=';
+
 			if (strpos($before, 'T') === false) {
-				$whereClauses[] = 'date(reservation_start) <= %s';
+				$whereClauses[] = "date(reservation_start) {$comparison} %s";
 			} else {
-				$whereClauses[] = 'reservation_start <= %s';
+				$whereClauses[] = "reservation_start {$comparison} %s";
 			}
 			$whereValues[] = $before;
 		}

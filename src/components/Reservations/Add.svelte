@@ -100,8 +100,8 @@
 		try {
 			reservations = await fetchReservations({
 				resource_id: resourceId,
-				before: dateTimeString(before),
-				after: dateTimeString(after),
+				beforeExclusive: dateTimeString(before),
+				afterExclusive: dateTimeString(after),
 			});
 		} catch (err) {
 			console.error(err);
