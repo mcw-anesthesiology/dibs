@@ -40,9 +40,9 @@ class ReservationsController extends BaseController {
 		$before = $request->get_param('end') ?? $request->get_param('before');
 		if (!empty($before)) {
 			if (strpos($before, 'T') === false) {
-				$whereClauses[] = 'date(reservation_start) >= %s';
+				$whereClauses[] = 'date(reservation_start) <= %s';
 			} else {
-				$whereClauses[] = 'reservation_start >= %s';
+				$whereClauses[] = 'reservation_start <= %s';
 			}
 			$whereValues[] = $before;
 		}
