@@ -29,13 +29,21 @@ class ReservationsController extends BaseController {
 	public static function get($request, $whereClauses = [], $whereValues = []) {
 		$after = $request->get_param('start') ?? $request->get_param('after');
 		if (!empty($after)) {
-			$whereClauses[] = 'date(reservation_end) >= %s';
+			if (strpos($after, 'T') === false) {
+				$whereClauses[] = 'date(reservation_end) >= %s';
+			} else {
+				$whereClauses[] = 'reservation_end >= %s';
+			}
 			$whereValues[] = $after;
 		}
 
 		$before = $request->get_param('end') ?? $request->get_param('before');
 		if (!empty($before)) {
-			$whereClauses[] = 'date(reservation_start) <= %s';
+			if (strpos($before, 'T') === false) {
+				$whereClauses[] = 'date(reservation_start) >= %s';
+			} else {
+				$whereClauses[] = 'reservation_start >= %s';
+			}
 			$whereValues[] = $before;
 		}
 
